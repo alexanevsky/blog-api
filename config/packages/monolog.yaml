@@ -2,6 +2,7 @@ monolog:
     channels:
         - 'event'
         - 'exception'
+        - 'failed_response'
 
     handlers:
         main:
@@ -16,6 +17,7 @@ monolog:
                 - '!doctrine'
                 - '!event'
                 - '!exception'
+                - '!failed_response'
                 - '!php'
                 - '!request'
                 - '!security'
@@ -59,6 +61,14 @@ monolog:
             max_files:          7
             level:              'error'
             channels:           'exception'
+
+        failed_response:
+            file_permission:    '0666'
+            type:               'rotating_file'
+            max_files:          7
+            path:               '%kernel.logs_dir%/failed_response.log'
+            level:              'error'
+            channels:           'failed_response'
 
         php:
             file_permission:    '0666'

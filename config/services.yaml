@@ -15,3 +15,14 @@ services:
             - '../src/Entity/'
             - '../src/Tests/'
             - '../src/Kernel.php'
+
+    App\EventListener\KernelEventListener:
+        tags:
+            -
+                method:     'catchResponse'
+                name:       'kernel.event_listener'
+                event:      'kernel.response'
+            -
+                method:     'catchException'
+                name:       'kernel.event_listener'
+                event:      'kernel.exception'

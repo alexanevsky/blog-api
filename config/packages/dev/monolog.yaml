@@ -12,6 +12,8 @@ monolog:
             level:  'debug'
         exception:
             level:  'debug'
+        failed_response:
+            level:  'debug'
         php:
             level:  'debug'
         request:
