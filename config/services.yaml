@@ -1,6 +1,7 @@
 parameters:
     # Directories
-    app.dir.langs:  '%kernel.project_dir%/langs'
+    app.dir.jwt_keys:   '%kernel.project_dir%/config/secrets/jwt'
+    app.dir.langs:      '%kernel.project_dir%/langs'
 
     # Routing
     router.request_context.host:        '%env(ROUTER_HOST)%'
@@ -19,6 +20,11 @@ services:
             - '../src/Entity/'
             - '../src/Tests/'
             - '../src/Kernel.php'
+
+    App\Controller\:
+        resource:   '../src/Controller/'
+        tags:
+            - 'controller.service_arguments'
 
     App\EventListener\KernelEventListener:
         tags:

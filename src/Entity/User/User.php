@@ -698,7 +698,7 @@ class User implements EntityInterface, UserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->email ?? '';
+        return (string) $this->id;
     }
 
     public function getSalt(): ?string

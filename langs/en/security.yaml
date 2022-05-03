@@ -1,0 +1,19 @@
+messages:
+    user:
+        need_auth:  '%common.messages.need_auth%'
+        not_found:  'User not found!'
+        banned:     'User is banned!'
+
+    password_authenticaton:
+        authenticated:          'You are successfully authenticated!'
+        invalid_credentials:    'Given credentials are invalid!'
+        password_is_empty:      'Password is empty!'
+        password_not_verified:  'Password is invalid!'
+
+    token_authenticaton:
+        invalid_payload:    'Token is invalid!'
+
+    refresh_authenticaton:
+        authenticated:  'Tokens updated!'
+        missed_token:   'Refresh token is empty!'
+        invalid_token:  'Refresh token is invalid!'

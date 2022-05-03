@@ -2,12 +2,13 @@
 
 namespace App\Entity\User;
 
+use App\Component\Authenticator\RefreshTokenEntityInterface;
 use App\Component\Doctrine\EntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity()]
 #[ORM\Table(name: 'users_refresh_tokens')]
-class UserRefreshToken implements EntityInterface
+class UserRefreshToken implements EntityInterface, RefreshTokenEntityInterface
 {
     #[ORM\Id(), ORM\GeneratedValue(), ORM\Column(type: 'integer', options: ['unsigned' => true])]
     private int $id;

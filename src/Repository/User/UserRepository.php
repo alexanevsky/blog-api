@@ -12,4 +12,14 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
+
+    public function findOneById(int $id): ?User
+    {
+        return $this->findOneBy(['id' => $id]);
+    }
+
+    public function findOneByEmail(string $email): ?User
+    {
+        return $this->findOneBy(['email' => $email]);
+    }
 }

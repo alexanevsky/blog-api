@@ -1,16 +1,33 @@
 security:
     enable_authenticator_manager: true
 
-    password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-
     providers:
-        users_in_memory: { memory: null }
+        user_provider:
+            entity:
+                class:  'App\Entity\User'
 
     firewalls:
         dev:
-            pattern: '^/(_(profiler|wdt)|css|images|js)/'
-            security: false
-        main:
-            lazy:       true
-            provider:   'users_in_memory'
+            pattern:    '^/(_(profiler|wdt)|css|images|js)/'
+            security:   false
+
+        user_password:
+            pattern:                '^/management/login$'
+            provider:               'user_provider'
+            lazy:                   true
+            stateless:              true
+            custom_authenticator:   'App\Security\Authenticator\PasswordAuthenticator'
+
+        user_jwt_refresh:
+            pattern:                '^/management/login/refresh$'
+            provider:               'user_provider'
+            lazy:                   true
+            stateless:              true
+            custom_authenticator:   'App\Security\Authenticator\RefreshAuthenticator'
+
+        user_jwt:
+            pattern:                '^/management'
+            provider:               'user_provider'
+            lazy:                   true
+            stateless:              true
+            custom_authenticator:   'App\Security\Authenticator\TokenAuthenticator'
