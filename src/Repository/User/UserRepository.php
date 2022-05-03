@@ -30,6 +30,11 @@ class UserRepository extends ServiceEntityRepository
         return $this->findOneBy(['email' => $email]);
     }
 
+    public function findOneByIdOrAlias(int|string $id): ?User
+    {
+        return $this->findOneBy(is_numeric($id) ? ['id' => (int) $id] : ['alias' => $id]);
+    }
+
     /**
      * @return User[]
      */
@@ -45,6 +50,25 @@ class UserRepository extends ServiceEntityRepository
         $qb = $this->buildQuery()
             ->andWhere('u.isErased = :isErased')->setParameter('isErased', false)
             ->andWhere('u.isDeleted = :isDeleted')->setParameter('isDeleted', false);
+
+        return new PaginatedCollection($qb, $offset, $limit);
+    }
+
+    public function findDeletedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
+    {
+        $qb = $this->buildQuery()
+            ->andWhere('u.isErased = :isErased')->setParameter('isErased', false)
+            ->andWhere('u.isDeleted = :isDeleted')->setParameter('isDeleted', true);
+
+        return new PaginatedCollection($qb, $offset, $limit);
+    }
+
+    public function findNotDeletedBannedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
+    {
+        $qb = $this->buildQuery()
+            ->andWhere('u.isErased = :isErased')->setParameter('isErased', false)
+            ->andWhere('u.isDeleted = :isDeleted')->setParameter('isDeleted', false)
+            ->andWhere('u.isBanned = :isBanned')->setParameter('isBanned', true);
 
         return new PaginatedCollection($qb, $offset, $limit);
     }

@@ -1,0 +1,12 @@
+messages:
+    banned_users:
+        access_denied:  'You do not have access to the list of banned users.'
+
+    deleted_users:
+        access_denied:  'You do not have access to the list of deleted users.'
+
+    user:
+        not_found:      'User not found.'
+        erased:         'The user has been deleted.'
+        deleted:        'The user has been deleted.'
+        access_denied:  'You do not have access to this user.'
