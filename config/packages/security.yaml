@@ -12,21 +12,20 @@ security:
             security:   false
 
         user_password:
-            pattern:                '^/management/login$'
+            pattern:                '^/auth$'
             provider:               'user_provider'
             lazy:                   true
             stateless:              true
             custom_authenticator:   'App\Security\Authenticator\PasswordAuthenticator'
 
         user_jwt_refresh:
-            pattern:                '^/management/login/refresh$'
+            pattern:                '^/auth/refresh$'
             provider:               'user_provider'
             lazy:                   true
             stateless:              true
             custom_authenticator:   'App\Security\Authenticator\RefreshAuthenticator'
 
         user_jwt:
-            pattern:                '^/management'
             provider:               'user_provider'
             lazy:                   true
             stateless:              true

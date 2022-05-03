@@ -1,3 +1,6 @@
+imports:
+    - { resource: 'parameters.yaml' }
+
 parameters:
     # Directories
     app.dir.demo:       '%kernel.project_dir%/demo'
