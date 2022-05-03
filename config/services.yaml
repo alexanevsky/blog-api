@@ -1,5 +1,6 @@
 parameters:
     # Directories
+    app.dir.demo:       '%kernel.project_dir%/demo'
     app.dir.jwt_keys:   '%kernel.project_dir%/config/secrets/jwt'
     app.dir.langs:      '%kernel.project_dir%/langs'
 
