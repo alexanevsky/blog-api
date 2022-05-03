@@ -6,9 +6,7 @@ use App\Component\Response\JsonResponse\FailureResponse;
 use App\Component\Response\JsonResponse\JsonResponse;
 use App\Component\Response\JsonResponse\NeedAuthResponse;
 use App\Component\Response\JsonResponse\SuccessResponse;
-use App\Entity\User\User;
-use App\Normalizer\Management\User\UserNormalizer;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Normalizer\User\UserNormalizer;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/auth')]
@@ -29,18 +27,15 @@ class SecurityController extends AbstractController
     #[Route(path: '/user', methods: ['GET'])]
     public function user(): JsonResponse
     {
-        /** @var User|null */
-        $user = $this->getUser();
-
-        if (!$user instanceof User) {
+        if (!$this->isLogged()) {
             return new NeedAuthResponse('security.messages.user.need_auth');
         }
 
         return new SuccessResponse(data: [
-            'user' => [
-                'id' =>         $user->getId(),
-                'username' =>   $user->getUsername()
-            ]
+            'user' => $this->normalize(UserNormalizer::class, $this->getUser(), [
+                'permissions',
+                'security_permissions'
+            ])
         ]);
     }
 }

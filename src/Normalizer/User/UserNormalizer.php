@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Normalizer\User;
+
+use App\Component\Converter\ContactConverter;
+use App\Component\Normalizer\NormalizerInterface;
+use App\Entity\User\User;
+use App\Security\Voter\SecurityVoter;
+use App\Security\Voter\User\UserVoter;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\Security\Core\Security;
+
+class UserNormalizer implements NormalizerInterface
+{
+    public function __construct(
+        protected ContactConverter      $contactConverter,
+        protected ContainerBagInterface $config,
+        protected Security              $security
+    )
+    {}
+
+    /**
+     * {@inheritDoc}
+     */
+    public function supports($data): bool
+    {
+        return $data instanceof User;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param User $data
+     */
+    public function normalize($data, array $includes = []): array
+    {
+        $output = [
+            'id' =>                             $data->getId(),
+            'username' =>                       $data->getUsername(),
+            'alias' =>                          $data->getAlias(),
+            'email' =>                          $data->isEmailHidden() && !$this->security->isGranted(UserVoter::ATTR_EDIT, $data) ? null : $data->getEmail(),
+            'is_email_hidden' =>                $data->isEmailHidden(),
+            'phone' =>                          $data->getPhone(),
+            'website' =>                        $data->getWebsite(),
+            'contacts' =>                       array_values($this->contactConverter->addLinks($data->getContacts())),
+            'birthdate' =>                      $data->getBirthdate()?->format('Y-m-d'),
+            'avatar' =>                         $data->getAvatar(),
+            'title' =>                          $data->getTitle(),
+            'city' =>                           $data->getCity(),
+            'biography' =>                      $data->getBiography(),
+            'first_useragent' =>                $data->getFirstUseragent(),
+            'first_ip' =>                       $data->getFirstIp(),
+            'is_banned' =>                      $data->isBanned(),
+            'is_communication_banned' =>        $data->isCommunicationBanned(),
+            'is_deleted' =>                     $data->isDeleted(),
+            'is_erased' =>                      $data->isErased(),
+            'is_allowed_adv_notifications' =>   $data->isAllowedAdvNotifications(),
+            'roles' =>                          $data->getRoles(),
+            'sorting' =>                        $data->getSorting(),
+            'created_at' =>                     $data->getCreatedAt()?->format('c'),
+            'edited_at' =>                      $data->getEditedAt()?->format('c'),
+            'deleted_at' =>                     $data->getDeletedAt()?->format('c'),
+            'erased_at' =>                      $data->getErasedAt()?->format('c')
+        ];
+
+        if (in_array('permissions', $includes)) {
+            $output['permissions'] = array_combine(UserVoter::ATTRIBUTES, array_map(function (string $attribute) use ($data) {
+                return $this->security->isGranted($attribute, $data);
+            }, UserVoter::ATTRIBUTES));
+        }
+
+        if (in_array('security_permissions', $includes, true)) {
+            $output['security_permissions'] = array_combine(SecurityVoter::ATTRIBUTES, array_map(function (string $attribute) {
+                return $this->security->isGranted($attribute);
+            }, SecurityVoter::ATTRIBUTES));
+        }
+
+        return $output;
+    }
+}

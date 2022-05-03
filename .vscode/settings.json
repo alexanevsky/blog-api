@@ -1,0 +1,6 @@
+{
+    "yaml.customTags": [
+        "!tagged_locator mapping",
+        "!tagged_iterator mapping"
+    ]
+}

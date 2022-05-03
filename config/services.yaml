@@ -40,3 +40,13 @@ services:
                 method:     'catchException'
                 name:       'kernel.event_listener'
                 event:      'kernel.exception'
+
+    _instanceof:
+        App\Component\Normalizer\NormalizerInterface:
+            tags: ['entity_normalizer_interface']
+            lazy: true
+
+    App\Component\Normalizer\NormalizerFactory:
+        arguments:
+            - !tagged_locator
+              tag: 'entity_normalizer_interface'

@@ -17,30 +17,35 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[UniqueEntity(fields: 'alias', message: 'users.errors.alias.exists')]
 class User implements EntityInterface, UserInterface
 {
-    /**
-     * Allowed user roles.
-     */
+    public const ROLE_TECH =            'ROLE_TECH';
+    public const ROLE_ADMIN =           'ROLE_ADMIN';
+    public const ROLE_USERS_MANAGER =   'ROLE_USERS_MANAGER';
+    public const ROLE_BLOG_MANAGER =    'ROLE_BLOG_MANAGER';
+    public const ROLE_BLOG_AUTHOR =     'ROLE_BLOG_AUTHOR';
+    public const ROLE_USER =            'ROLE_USER';
+
     public const ROLES = [
-        'ROLE_TECH',
-        'ROLE_ADMIN',
-        'ROLE_USERS_MANAGER',
-        'ROLE_BLOG_MANAGER',
-        'ROLE_BLOG_AUTHOR'
+        self::ROLE_TECH,
+        self::ROLE_ADMIN,
+        self::ROLE_USERS_MANAGER,
+        self::ROLE_BLOG_MANAGER,
+        self::ROLE_BLOG_AUTHOR,
+        self::ROLE_USER
     ];
 
     /**
      * Default user role. All users must contain it.
      */
-    public const DEFAULT_ROLE = 'ROLE_USER';
+    public const DEFAULT_ROLE = self::ROLE_USER;
 
     /**
      * Sorting number of given roles.
      */
     public const ROLE_SORTING_VALUES = [
-        'ROLE_ADMIN' =>         100,
-        'ROLE_USERS_MANAGER' => 90,
-        'ROLE_BLOG_MANAGER' =>  10,
-        'ROLE_BLOG_AUTHOR' =>   9
+        self::ROLE_ADMIN =>         100,
+        self::ROLE_USERS_MANAGER => 90,
+        self::ROLE_BLOG_MANAGER =>  10,
+        self::ROLE_BLOG_AUTHOR =>   9
     ];
 
     /**
