@@ -1,0 +1,6 @@
+messages:
+    access_denied:  'Access denied!'
+    deleted:        'Deleted!'
+    failed:         'Something went wrong...'
+    need_auth:      'Authorization required!'
+    not_found:      'Not found!'

@@ -1,4 +1,8 @@
 parameters:
+    # Directories
+    app.dir.langs:  '%kernel.project_dir%/langs'
+
+    # Routing
     router.request_context.host:        '%env(ROUTER_HOST)%'
     router.request_context.scheme:      '%env(ROUTER_SCHEME)%'
     router.request_context.base_url:    '%env(ROUTER_BASE_URL)%'
