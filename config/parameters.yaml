@@ -4,6 +4,21 @@ parameters:
     app.jwt.refresh_token_ttl:  '%env(int:JWT_REFRESH_TOKEN_TTL)%'
 
     # Contacts
+    app.contacts.available:
+        - 'facebook'        # facebook.com/profile.php?id=* || facebook.com/*  || fb.com/*
+        - 'instagram'       # instagram.com/*/
+        - 'twitter'         # twitter.com/* || twitter.com/@*
+        - 'linkedin'        # linkedin.com/in/* || linked.in/*
+        - 'vk'              # vk.com/* || vk.com/id* || vk.me/* || vk.me/id*
+        - 'medium'          # *.medium.com || medium.com/* || medium.com/@*
+        - 'github'          # github.com/*/
+        - 'bitbucket'       # bitbucket.org/*/ || bitbucket.com/*/
+        - 'flickr'          # flickr.com/people/*/ || flickr.com/photos/*/ || flickr.com/*/
+        - 'behance'         # behance.net/*
+        - 'dribbble'        # dribbble.com/*
+        - 'skype'           # *
+        - 'telegram'        # t.me/*
+
     app.contacts.formats:
         facebook:       'https://facebook.com/%s'
         instagram:      'https://instagram.com/%s/'
@@ -33,3 +48,14 @@ parameters:
         dribbble:     '^(?:(?:.+)(?:com))*(?:\/)*(\w+)(?:.*)$'
         skype:        '^(?:skype\:)*(?:(?:.+)(?:com))*(?:\/)*(\w+)(?:.*)$'
         telegram:     '^(?:(?:.+)(?:com|me))*(?:\/)*(\w+)(?:.*)$'
+
+    # Users config options
+    app.users.contacts: '%app.contacts.available%'
+
+    app.users.enable_website:   true
+    app.users.enable_phone:     true
+    app.users.enable_city:      true
+    app.users.enable_birthdate: true
+    app.users.enable_contacts:  true
+
+    app.users.restore_days_limit:   30

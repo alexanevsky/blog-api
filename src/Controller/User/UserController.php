@@ -12,6 +12,7 @@ use App\Entity\User\User;
 use App\Normalizer\User\UserCollectionNormalizer;
 use App\Normalizer\User\UserNormalizer;
 use App\Repository\User\UserRepository;
+use App\Resolver\User\UserResolverBuilder;
 use App\Security\Voter\User\UserVoter;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -19,7 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     public function __construct(
-        private UserRepository $usersRepository
+        private UserRepository      $usersRepository,
+        private UserResolverBuilder $userResolverBuilder,
     )
     {}
 

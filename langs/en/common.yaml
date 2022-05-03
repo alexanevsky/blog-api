@@ -4,3 +4,18 @@ messages:
     failed:         'Something went wrong...'
     need_auth:      'Authorization required!'
     not_found:      'Not found!'
+
+constraints:
+    numeric:                    'The value must be numeric.'
+    not_numeric:                'The value must not be numeric.'
+    blank:                      'The value must be blank.'
+    not_blank:                  'The value must not be blank.'
+    type:                       'The value type is incorrect.'
+    email:                      'The value is not a valid email address.'
+    min_length:                 'The value should have {limit} character or more.'
+    max_length:                 'The value should have {limit} character or less.'
+    url:                        'The value is not a valid URL.'
+    positive:                   'The value must be positive.'
+    less_or_equal:              'The value must be less than or equal to {value}.'
+    identical_to_one_of:        'The value is incorrect.'
+    all_identical_to_one_of:    'The value is incorrect.'

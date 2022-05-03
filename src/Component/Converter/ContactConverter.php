@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 class ContactConverter
 {
+    private array $default =    [];
     private array $formats =    [];
     private array $regex =      [];
 
@@ -13,6 +14,7 @@ class ContactConverter
         private ContainerBagInterface $parameters
     )
     {
+        $this->default =    $this->parameters->get('app.contacts.available');
         $this->formats =    $this->parameters->get('app.contacts.formats');
         $this->regex =      $this->parameters->get('app.contacts.regex');
     }
@@ -39,6 +41,14 @@ class ContactConverter
         }, $contacts);
     }
 
+    public function filter(array $contacts, ?array $available = null): array
+    {
+        $available ??= $this->default;
+
+        return array_values(array_filter($contacts, function (array $contact) use ($available) {
+            return isset($contact['contact']) && !empty($contact['value']) && in_array($contact['contact'], $available, true);
+        }));
+    }
 
     public function toLink(string $contact, string $value): string
     {

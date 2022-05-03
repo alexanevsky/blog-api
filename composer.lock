@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d8d20f06d991e6f18611b16a18f08a83",
+    "content-hash": "cbdc3a97225d1277b484c13aba09cd11",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -59,6 +59,57 @@
                 "source": "https://github.com/adbario/php-dot-notation/tree/3.1.1"
             },
             "time": "2022-03-28T01:09:30+00:00"
+        },
+        {
+            "name": "alexanevsky/data-resolver",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alexanevsky/data-resolver.git",
+                "reference": "071ee077c92e464c394e0f61b54b84be153063a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alexanevsky/data-resolver/zipball/071ee077c92e464c394e0f61b54b84be153063a0",
+                "reference": "071ee077c92e464c394e0f61b54b84be153063a0",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "^2.6",
+                "php": ">=7.4",
+                "symfony/string": "^5.1|^6.0",
+                "symfony/translation": "^5.2|^6.0",
+                "symfony/validator": "^5.1|^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Alexanevsky\\DataResolver\\": "src/DataResolver"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Lashchevsky",
+                    "email": "alexander@lashchevsky.me"
+                }
+            ],
+            "description": "Transforms and validates data of arrays and entities",
+            "keywords": [
+                "config",
+                "configuration",
+                "options",
+                "options-resolver",
+                "transformer"
+            ],
+            "support": {
+                "issues": "https://github.com/alexanevsky/data-resolver/issues",
+                "source": "https://github.com/alexanevsky/data-resolver/tree/1.0.0"
+            },
+            "time": "2022-04-27T20:22:07+00:00"
         },
         {
             "name": "doctrine/annotations",

@@ -13,9 +13,9 @@ use Symfony\Component\Security\Core\Security;
 class UserNormalizer implements NormalizerInterface
 {
     public function __construct(
-        protected ContactConverter      $contactConverter,
-        protected ContainerBagInterface $config,
-        protected Security              $security
+        private ContactConverter        $contactConverter,
+        private ContainerBagInterface   $parameters,
+        private Security                $security
     )
     {}
 
@@ -42,7 +42,7 @@ class UserNormalizer implements NormalizerInterface
             'is_email_hidden' =>                $data->isEmailHidden(),
             'phone' =>                          $data->getPhone(),
             'website' =>                        $data->getWebsite(),
-            'contacts' =>                       array_values($this->contactConverter->addLinks($data->getContacts())),
+            'contacts' =>                       array_values($this->contactConverter->addLinks($this->contactConverter->filter($data->getContacts(), $this->parameters->get('app.users.contacts')))),
             'birthdate' =>                      $data->getBirthdate()?->format('Y-m-d'),
             'avatar' =>                         $data->getAvatar(),
             'title' =>                          $data->getTitle(),

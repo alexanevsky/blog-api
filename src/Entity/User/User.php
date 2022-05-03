@@ -95,8 +95,8 @@ class User implements EntityInterface, UserInterface
     #[ORM\Column(type: 'json')]
     protected array $contacts = [];
 
-    #[ORM\Column(type: 'date', nullable: true)]
-    protected ?\DateTime $birthdate = null;
+    #[ORM\Column(type: 'string', nullable: true)]
+    protected ?string $birthdate = null;
 
     #[ORM\Column(type: 'string')]
     protected string $avatar = '';
@@ -309,12 +309,12 @@ class User implements EntityInterface, UserInterface
         return !empty($this->contacts);
     }
 
-    public function getBirthdate(): ?\DateTime
+    public function getBirthdate(): ?string
     {
         return $this->birthdate;
     }
 
-    public function setBirthdate(?\DateTime $birthdate): self
+    public function setBirthdate(?string $birthdate): self
     {
         $this->birthdate = $birthdate;
         return $this;
