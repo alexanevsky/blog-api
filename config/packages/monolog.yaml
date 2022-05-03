@@ -1,0 +1,77 @@
+monolog:
+    channels:
+        - 'event'
+        - 'exception'
+
+    handlers:
+        main:
+            file_permission:    '0666'
+            type:               'rotating_file'
+            path:               '%kernel.logs_dir%/main.log'
+            max_files:          7
+            level:              'error'
+            channels:
+                - '!app'
+                - '!console'
+                - '!doctrine'
+                - '!event'
+                - '!exception'
+                - '!php'
+                - '!request'
+                - '!security'
+
+        app:
+            file_permission:    '0666'
+            type:               'rotating_file'
+            path:               '%kernel.logs_dir%/app.log'
+            max_files:          7
+            level:              'error'
+            channels:           'app'
+
+        console:
+            file_permission:    '0666'
+            type:               'rotating_file'
+            path:               '%kernel.logs_dir%/console.log'
+            max_files:          7
+            level:              'info'
+            channels:           'console'
+
+        doctrine:
+            file_permission:    '0666'
+            type:               'rotating_file'
+            path:               '%kernel.logs_dir%/doctrine.log'
+            max_files:          7
+            level:              'info'
+            channels:           'doctrine'
+
+        event:
+            file_permission:    '0666'
+            type:               'rotating_file'
+            path:               '%kernel.logs_dir%/event.log'
+            max_files:          7
+            level:              'error'
+            channels:           'event'
+
+        exception:
+            file_permission:    '0666'
+            type:               'rotating_file'
+            path:               '%kernel.logs_dir%/exception.log'
+            max_files:          7
+            level:              'error'
+            channels:           'exception'
+
+        php:
+            file_permission:    '0666'
+            type:               'rotating_file'
+            path:               '%kernel.logs_dir%/php.log'
+            max_files:          7
+            level:              'error'
+            channels:           'php'
+
+        request:
+            file_permission:    '0666'
+            type:               'rotating_file'
+            path:               '%kernel.logs_dir%/request.log'
+            max_files:          7
+            level:              'error'
+            channels:           'request'

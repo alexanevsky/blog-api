@@ -1,0 +1,18 @@
+monolog:
+    handlers:
+        main:
+            level:  'debug'
+        app:
+            level:  'debug'
+        console:
+            level:  'debug'
+        doctrine:
+            level:  'debug'
+        event:
+            level:  'debug'
+        exception:
+            level:  'debug'
+        php:
+            level:  'debug'
+        request:
+            level:  'debug'

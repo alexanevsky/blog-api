@@ -1,0 +1,17 @@
+parameters:
+    router.request_context.host:        '%env(ROUTER_HOST)%'
+    router.request_context.scheme:      '%env(ROUTER_SCHEME)%'
+    router.request_context.base_url:    '%env(ROUTER_BASE_URL)%'
+
+services:
+    _defaults:
+        autowire:       true
+        autoconfigure:  true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Tests/'
+            - '../src/Kernel.php'
