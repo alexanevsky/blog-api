@@ -62,16 +62,16 @@
         },
         {
             "name": "alexanevsky/data-resolver",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alexanevsky/data-resolver.git",
-                "reference": "071ee077c92e464c394e0f61b54b84be153063a0"
+                "reference": "a0564de95e6d404aa5042fbb663a2ed0561efc9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alexanevsky/data-resolver/zipball/071ee077c92e464c394e0f61b54b84be153063a0",
-                "reference": "071ee077c92e464c394e0f61b54b84be153063a0",
+                "url": "https://api.github.com/repos/alexanevsky/data-resolver/zipball/a0564de95e6d404aa5042fbb663a2ed0561efc9c",
+                "reference": "a0564de95e6d404aa5042fbb663a2ed0561efc9c",
                 "shasum": ""
             },
             "require": {
@@ -107,9 +107,9 @@
             ],
             "support": {
                 "issues": "https://github.com/alexanevsky/data-resolver/issues",
-                "source": "https://github.com/alexanevsky/data-resolver/tree/1.0.0"
+                "source": "https://github.com/alexanevsky/data-resolver/tree/1.0.1"
             },
-            "time": "2022-04-27T20:22:07+00:00"
+            "time": "2022-05-06T21:39:18+00:00"
         },
         {
             "name": "doctrine/annotations",
