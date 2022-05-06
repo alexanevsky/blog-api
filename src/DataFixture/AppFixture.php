@@ -51,9 +51,7 @@ class AppFixture extends Fixture
         User::class => ['roles']
     ];
 
-    public const TYPES_DATETIME = [
-        User::class => ['birthdate']
-    ];
+    public const TYPES_DATETIME = [];
 
     public const TYPES_DATETIME_MODIFIED = [
         BlogComment::class =>   ['createdAt', 'updatedAt', 'trashedAt'],
