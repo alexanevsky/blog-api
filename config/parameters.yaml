@@ -49,6 +49,9 @@ parameters:
         skype:        '^(?:skype\:)*(?:(?:.+)(?:com))*(?:\/)*(\w+)(?:.*)$'
         telegram:     '^(?:(?:.+)(?:com|me))*(?:\/)*(\w+)(?:.*)$'
 
+    # Blog posts config options
+    app.blog_posts.restore_days_limit:   30
+
     # Users config options
     app.users.contacts: '%app.contacts.available%'
 
@@ -58,4 +61,4 @@ parameters:
     app.users.enable_birthdate: true
     app.users.enable_contacts:  true
 
-    app.users.untrash_days_limit:   30
+    app.users.restore_days_limit:   30

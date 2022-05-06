@@ -41,7 +41,7 @@ class Post implements EntityInterface
     protected bool $isPublished = true;
 
     #[ORM\Column(type: 'boolean')]
-    protected bool $isTrashed = false;
+    protected bool $isRemoved = false;
 
     #[ORM\Column(type: 'datetime')]
     protected \DateTime $createdAt;
@@ -53,7 +53,7 @@ class Post implements EntityInterface
     protected ?\DateTime $updatedAt = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTime $trashedAt = null;
+    protected ?\DateTime $removedAt = null;
 
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post', fetch: 'EXTRA_LAZY'), ORM\OrderBy(['createdAt' => 'ASC'])]
     protected Collection $comments;
@@ -254,14 +254,14 @@ class Post implements EntityInterface
         return $this;
     }
 
-    public function isTrashed(): bool
+    public function isRemoved(): bool
     {
-        return $this->isTrashed;
+        return $this->isRemoved;
     }
 
-    public function setTrashed(bool $isTrashed): self
+    public function setRemoved(bool $isRemoved): self
     {
-        $this->isTrashed = $isTrashed;
+        $this->isRemoved = $isRemoved;
         return $this;
     }
 
@@ -331,26 +331,26 @@ class Post implements EntityInterface
         return !empty($this->updatedAt);
     }
 
-    public function getTrashedAt(): ?\DateTime
+    public function getRemovedAt(): ?\DateTime
     {
-        return $this->trashedAt;
+        return $this->removedAt;
     }
 
-    public function setTrashedAt(?\DateTime $trashedAt): self
+    public function setRemovedAt(?\DateTime $removedAt): self
     {
-        $this->trashedAt = $trashedAt;
+        $this->removedAt = $removedAt;
         return $this;
     }
 
-    public function setTrashedNow(): self
+    public function setRemovedNow(): self
     {
-        $this->trashedAt = new \DateTime();
+        $this->removedAt = new \DateTime();
         return $this;
     }
 
-    public function hasTrashedAt(): bool
+    public function hasRemovedAt(): bool
     {
-        return !empty($this->trashedAt);
+        return !empty($this->removedAt);
     }
 
     public function getComments(): Collection

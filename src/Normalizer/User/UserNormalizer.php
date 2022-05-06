@@ -14,24 +14,19 @@ use Symfony\Component\Security\Core\Security;
 class UserNormalizer extends AbstractNormalizer
 {
     public function __construct(
-        private ContactConverter        $contactConverter,
-        private ContainerBagInterface   $parameters,
-        private NormalizerFactory       $normalizer,
-        private Security                $security
+        protected ContactConverter      $contactConverter,
+        protected ContainerBagInterface $parameters,
+        protected NormalizerFactory     $normalizer,
+        protected Security              $security
     )
     {}
 
-    /**
-     * {@inheritDoc}
-     */
     public function supports($data): bool
     {
         return $data instanceof User;
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @param User $data
      */
     public function normalize($data, array $includes = []): array
@@ -54,14 +49,14 @@ class UserNormalizer extends AbstractNormalizer
             'first_ip' =>                       $data->getFirstIp(),
             'is_banned' =>                      $data->isBanned(),
             'is_communication_banned' =>        $data->isCommunicationBanned(),
-            'is_trashed' =>                     $data->isTrashed(),
+            'is_removed' =>                     $data->isRemoved(),
             'is_erased' =>                      $data->isErased(),
             'is_allowed_adv_notifications' =>   $data->isAllowedAdvNotifications(),
             'roles' =>                          $data->getRoles(),
             'sorting' =>                        $data->getSorting(),
             'created_at' =>                     $data->getCreatedAt()?->format('c'),
             'updated_at' =>                     $data->getUpdatedAt()?->format('c'),
-            'trashed_at' =>                     $data->getTrashedAt()?->format('c'),
+            'removed_at' =>                     $data->getRemovedAt()?->format('c'),
             'erased_at' =>                      $data->getErasedAt()?->format('c')
         ];
 

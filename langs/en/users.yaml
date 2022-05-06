@@ -1,15 +1,15 @@
 messages:
-    trash:
-        access_denied:  'You do not have access to the list of trashed users.'
+    removed_users:
+        access_denied:  'You do not have access to the list of removed users.'
 
     user:
         not_found:      'User not found.'
         erased:         'The user has been deleted.'
-        trashed:        'The user has been deleted.'
+        removed:        'The user has been deleted.'
         access_denied:  'You do not have access to this user.'
 
     user_create:
-        created:        'New user creates successfully.'
+        created:        'New user created successfully.'
         failed:         'The user was not created due to an error in the given data.'
         access_denied:  'You do not have access to create new user.'
 
@@ -18,13 +18,13 @@ messages:
         failed:         'The user was not updated due to an error in the given data.'
         access_denied:  'You do not have access to update this user.'
 
-    user_trash:
-        trashed:        'The user was successfully moved to the trash.'
-        access_denied:  'You do not have access to move to trash this user.'
+    user_remove:
+        removed:        'The user was successfully removed.'
+        access_denied:  'You do not have access to remove this user.'
 
-    user_untrash:
-        untrashed:      'The user was successfully removed from the trash.'
-        access_denied:  'You do not have access to remove from trash this user.'
+    user_restore:
+        restored:      'The user was successfully restored.'
+        access_denied:  'You do not have access to restore this user.'
 
     user_erase:
         erased:         'The user was successfully erased.'

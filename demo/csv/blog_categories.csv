@@ -1,0 +1,10 @@
+ID,Name,Alias,Is Active,Sorting,Description
+1,History,history,TRUE,1,"[{""type"": ""paragraph"", ""data"": {""text"": ""History - a section that tells that part of human history that is connected with the magical world. At the same time, the History of Magic leaves out the Muggle history.""}}]"
+2,Spells,spells,TRUE,2,"[{""type"": ""paragraph"", ""data"": {""text"": ""Spells can be conditionally divided into two groups: spells that use Latin words and spells that use the native language of the wizard (for the heroes of Harry Potter, this is, of course, English, all the occurrences of stupefied, money, deaf is nothing more than a translation. Also, all spells can be both spoken aloud and said to oneself (the so-called non-verbal spells).""}}]"
+3,Magical Rites,rites,TRUE,3,"[{""type"": ""paragraph"", ""data"": {""text"": ""Magic is an ability due to which, with the help of internal (mainly mental) energy, objects and phenomena can be controlled. Magic is morally and ethically neutral.""}}, {""type"": ""paragraph"", ""data"": {""text"": ""Magic is a supernatural force that can change the fabric of reality on a fundamental level. The ability to use magic is a hereditary trait and is passed on to descendants from ancestors, which allows witches and sorcerers to practice magic.""}}]"
+4,Organizations,organizations,TRUE,4,[]
+5,Administrative Units of Hogwarts,units,TRUE,5,[]
+6,Alchemists,alchemists,TRUE,6,[]
+7,Items,items,TRUE,7,[]
+8,Muggles,muggles,TRUE,9,[]
+9,Sketches,sketches,FALSE,8,[]

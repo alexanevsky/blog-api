@@ -123,7 +123,7 @@ class User implements EntityInterface, UserInterface
     protected bool $isCommunicationBanned = false;
 
     #[ORM\Column(type: 'boolean')]
-    protected bool $isTrashed = false;
+    protected bool $isRemoved = false;
 
     #[ORM\Column(type: 'boolean')]
     protected bool $isErased = false;
@@ -148,7 +148,7 @@ class User implements EntityInterface, UserInterface
     protected ?\DateTime $updatedAt = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTime $trashedAt = null;
+    protected ?\DateTime $removedAt = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTime $erasedAt = null;
@@ -447,14 +447,14 @@ class User implements EntityInterface, UserInterface
         return $this;
     }
 
-    public function isTrashed(): bool
+    public function isRemoved(): bool
     {
-        return $this->isTrashed;
+        return $this->isRemoved;
     }
 
-    public function setTrashed(bool $isTrashed): self
+    public function setRemoved(bool $isRemoved): self
     {
-        $this->isTrashed = $isTrashed;
+        $this->isRemoved = $isRemoved;
         return $this;
     }
 
@@ -626,26 +626,26 @@ class User implements EntityInterface, UserInterface
         return !empty($this->updatedAt);
     }
 
-    public function getTrashedAt(): ?\DateTime
+    public function getRemovedAt(): ?\DateTime
     {
-        return $this->trashedAt;
+        return $this->removedAt;
     }
 
-    public function setTrashedAt(?\DateTime $trashedAt): self
+    public function setRemovedAt(?\DateTime $removedAt): self
     {
-        $this->trashedAt = $trashedAt;
+        $this->removedAt = $removedAt;
         return $this;
     }
 
-    public function setTrashedNow(): self
+    public function setRemovedNow(): self
     {
-        $this->trashedAt = new \DateTime();
+        $this->removedAt = new \DateTime();
         return $this;
     }
 
-    public function hasTrashedAt(): bool
+    public function hasRemovedAt(): bool
     {
-        return !empty($this->trashedAt);
+        return !empty($this->removedAt);
     }
 
     public function getErasedAt(): ?\DateTime
@@ -702,7 +702,7 @@ class User implements EntityInterface, UserInterface
         $this->firstIp = '';
         $this->isBanned = false;
         $this->isCommunicationBanned = false;
-        $this->isTrashed = true;
+        $this->isRemoved = true;
         $this->isErased = true;
         $this->isAllowedAdvNotifications = false;
         $this->roles = [self::DEFAULT_ROLE];
@@ -715,8 +715,8 @@ class User implements EntityInterface, UserInterface
         if ($setErasedAt) {
             $this->erasedAt = new \DateTime();
 
-            if (!$this->trashedAt) {
-                $this->trashedAt = $this->erasedAt;
+            if (!$this->removedAt) {
+                $this->removedAt = $this->erasedAt;
             }
         }
     }

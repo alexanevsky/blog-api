@@ -10,8 +10,10 @@ use App\Component\Response\JsonResponse\NotFoundResponse;
 use App\Component\Response\JsonResponse\SuccessResponse;
 use App\Controller\AbstractController;
 use App\Entity\User\User;
+use App\Normalizer\Blog\PostMainCollectionNormalizer;
 use App\Normalizer\User\UserCollectionNormalizer;
 use App\Normalizer\User\UserNormalizer;
+use App\Repository\Blog\PostRepository;
 use App\Repository\User\UserRepository;
 use App\Resolver\User\UserResolverBuilder;
 use App\Security\Voter\SecurityVoter;
@@ -22,6 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     public function __construct(
+        private PostRepository      $postsRepository,
         private UserRepository      $usersRepository,
         private UserResolverBuilder $userResolverBuilder,
     )
@@ -35,7 +38,7 @@ class UserController extends AbstractController
             (int) $this->getQueryParameter('limit', UserRepository::PAGE_LIMIT)
         ];
 
-        $users = $this->usersRepository->findNotTrashedPaginated($usersOffset, $usersLimit);
+        $users = $this->usersRepository->findNotRemovedPaginated($usersOffset, $usersLimit);
 
         return new SuccessResponse(data: [
             'users' => $this->normalize(UserCollectionNormalizer::class, $users, ['permissions']),
@@ -43,11 +46,11 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/trash', methods: ['GET'])]
-    public function trash(): JsonResponse
+    #[Route(path: '/removed', methods: ['GET'])]
+    public function removed(): JsonResponse
     {
         if (!$this->isGrantedAny([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER])) {
-            return new AccessDeniedResponse('users.messages.trash.access_denied', needAuth: !$this->isLogged());
+            return new AccessDeniedResponse('users.messages.removed_users.access_denied', needAuth: !$this->isLogged());
         }
 
         [$usersOffset, $usersLimit] = [
@@ -55,7 +58,7 @@ class UserController extends AbstractController
             (int) $this->getQueryParameter('limit', UserRepository::PAGE_LIMIT)
         ];
 
-        $users = $this->usersRepository->findTrashedPaginated($usersOffset, $usersLimit);
+        $users = $this->usersRepository->findRemovedPaginated($usersOffset, $usersLimit);
 
         return new SuccessResponse(data: [
             'users' => $this->normalize(UserCollectionNormalizer::class, $users, ['permissions']),
@@ -73,8 +76,8 @@ class UserController extends AbstractController
         } elseif (!$this->isGranted(UserVoter::ATTR_VIEW, $user)) {
             if ($user->isErased()) {
                 return new DeletedResponse('users.messages.user.erased');
-            } elseif ($user->isTrashed()) {
-                return new DeletedResponse('users.messages.user.trashed');
+            } elseif ($user->isRemoved()) {
+                return new DeletedResponse('users.messages.user.removed');
             } else {
                 return new AccessDeniedResponse('users.messages.user.access_denied', needAuth: !$this->isLogged());
             }
@@ -122,7 +125,7 @@ class UserController extends AbstractController
 
     #[Route(path: '/{id<[\w-]+>}', methods: ['PATCH'])]
     #[Route(path: '/{id<[\w-]+>}/update', methods: ['GET', 'POST'])]
-    public function updateUser(int|string $id): JsonResponse
+    public function update(int|string $id): JsonResponse
     {
         $user = $this->usersRepository->findOneByIdOrAlias($id);
 
@@ -158,50 +161,50 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/{id<[\w-]+>}/trash', methods: ['POST'])]
-    public function trashUser(int|string $id): JsonResponse
+    #[Route(path: '/{id<[\w-]+>}/remove', methods: ['POST'])]
+    public function remove(int|string $id): JsonResponse
     {
         $user = $this->usersRepository->findOneByIdOrAlias($id);
 
         if (!$user) {
             return new NotFoundResponse('users.messages.user.not_found');
-        } elseif (!$this->isGranted(UserVoter::ATTR_TRASH, $user)) {
-            return new AccessDeniedResponse('users.messages.user_trash.access_denied', needAuth: !$this->isLogged());
+        } elseif (!$this->isGranted(UserVoter::ATTR_REMOVE, $user)) {
+            return new AccessDeniedResponse('users.messages.user_remove.access_denied', needAuth: !$this->isLogged());
         }
 
         $user
-            ->setTrashed(true)
-            ->setTrashedNow();
+            ->setRemoved(true)
+            ->setRemovedNow();
 
         $this->getDoctrineManager()->persist($user);
         $this->getDoctrineManager()->flush();
 
-        return new SuccessResponse('users.messages.user_trash.trashed');
+        return new SuccessResponse('users.messages.user_remove.removed');
     }
 
-    #[Route(path: '/{id<[\w-]+>}/untrash', methods: ['POST'])]
-    public function untrashUser(int|string $id): JsonResponse
+    #[Route(path: '/{id<[\w-]+>}/restore', methods: ['POST'])]
+    public function restore(int|string $id): JsonResponse
     {
         $user = $this->usersRepository->findOneByIdOrAlias($id);
 
         if (!$user) {
             return new NotFoundResponse('users.messages.user.not_found');
-        } elseif (!$this->isGranted(UserVoter::ATTR_UNTRASH, $user)) {
-            return new AccessDeniedResponse('users.messages.user_untrash.access_denied', needAuth: !$this->isLogged());
+        } elseif (!$this->isGranted(UserVoter::ATTR_RESTORE, $user)) {
+            return new AccessDeniedResponse('users.messages.user_restore.access_denied', needAuth: !$this->isLogged());
         }
 
         $user
-            ->setTrashed(false)
-            ->setTrashedAt(null);
+            ->setRemoved(false)
+            ->setRemovedAt(null);
 
         $this->getDoctrineManager()->persist($user);
         $this->getDoctrineManager()->flush();
 
-        return new SuccessResponse('users.messages.user_untrash.untrashed');
+        return new SuccessResponse('users.messages.user_restore.restored');
     }
 
     #[Route(path: '/{id<[\w-]+>}/erase', methods: ['POST'])]
-    public function eraseUser(int|string $id)
+    public function erase(int|string $id)
     {
         $user = $this->usersRepository->findOneByIdOrAlias($id);
 
@@ -217,5 +220,33 @@ class UserController extends AbstractController
         $this->getDoctrineManager()->flush();
 
         return new SuccessResponse('users.messages.user_erase.erased');
+    }
+
+    #[Route(path: '/{id<[\w-]+>}/blog/posts', methods: ['GET'])]
+    public function blogPosts(int|string $id): JsonResponse
+    {
+        $user = $this->usersRepository->findOneByIdOrAlias($id);
+
+        if (!$user) {
+            return new NotFoundResponse('users.messages.user.not_found');
+        } elseif (!$this->isGranted(UserVoter::ATTR_VIEW, $user)) {
+            return new AccessDeniedResponse('users.messages.user.access_denied', needAuth: !$this->isLogged());
+        }
+
+        [$postsOffset, $postsLimit] = [
+            (int) $this->getQueryParameter('offset', 0),
+            (int) $this->getQueryParameter('limit', PostRepository::PAGE_LIMIT)
+        ];
+
+        $posts = $this->postsRepository->findByAuthorPublishedPaginated($user, $postsOffset, $postsLimit);
+
+        return new SuccessResponse(data: [
+            'posts' => $this->normalize(PostMainCollectionNormalizer::class, $posts, [
+                'author',
+                'categories',
+                'permissions'
+            ]),
+            'posts_meta' => $posts->getMeta()
+        ]);
     }
 }

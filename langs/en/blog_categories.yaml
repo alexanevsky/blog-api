@@ -1,0 +1,30 @@
+messages:
+    category:
+        not_found:      'Category not found.'
+        access_denied:  'You do not have access to this category.'
+
+    category_create:
+        created:        'New category created successfully.'
+        failed:         'The category was not created due to an error in the given data.'
+        access_denied:  'You do not have access to create new category.'
+
+    category_update:
+        updated:        'The category updated successfully.'
+        failed:         'The category was not updated due to an error in the given data.'
+        access_denied:  'You do not have access to update this category.'
+
+    category_delete:
+        deleted:        'The category was successfully deleted.'
+        access_denied:  'You do not have access to delete this category.'
+
+errors:
+    name:
+        empty:  'Name can not be empty.'
+        exists: 'A category with given alias already exists.'
+
+    alias:
+        empty:      'Alias can not be empty.'
+        numeric:    'Alias can not be numeric.'
+        short:      'Alias should have {limit} character or more.'
+        long:       'Alias should have {limit} character or less.'
+        exists:     'A category with given alias already exists.'

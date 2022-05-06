@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20220506195659 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE blog_comments CHANGE is_trashed is_removed TINYINT(1) NOT NULL, CHANGE trashed_at removed_at DATETIME DEFAULT NULL');
+        $this->addSql('ALTER TABLE blog_posts CHANGE is_trashed is_removed TINYINT(1) NOT NULL, CHANGE trashed_at removed_at DATETIME DEFAULT NULL');
+        $this->addSql('ALTER TABLE users CHANGE is_trashed is_removed TINYINT(1) NOT NULL, CHANGE trashed_at removed_at DATETIME DEFAULT NULL');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE blog_comments CHANGE is_removed is_trashed TINYINT(1) NOT NULL, CHANGE removed_at trashed_at DATETIME DEFAULT NULL');
+        $this->addSql('ALTER TABLE blog_posts CHANGE is_removed is_trashed TINYINT(1) NOT NULL, CHANGE removed_at trashed_at DATETIME DEFAULT NULL');
+        $this->addSql('ALTER TABLE users CHANGE is_removed is_trashed TINYINT(1) NOT NULL, CHANGE removed_at trashed_at DATETIME DEFAULT NULL');
+    }
+}

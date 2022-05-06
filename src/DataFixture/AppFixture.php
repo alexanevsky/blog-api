@@ -10,15 +10,14 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
-
 use function Symfony\Component\String\u;
 
 class AppFixture extends Fixture
 {
     public const ALIASES = [
         User::class =>          'users',
-        // BlogCategory::class =>  'blog_categories',
-        // BlogPost::class =>      'blog_posts',
+        BlogCategory::class =>  'blog_categories',
+        BlogPost::class =>      'blog_posts',
         // BlogComment::class =>   'blog_comments'
     ];
 
@@ -30,9 +29,9 @@ class AppFixture extends Fixture
 
     public const TYPES_BOOLEAN = [
         BlogCategory::class =>  ['isActive'],
-        BlogComment::class =>   ['isTrashed'],
-        BlogPost::class =>      ['isPublished', 'isTrashed'],
-        User::class =>          ['isEmailHidden', 'isBanned', 'isCommunicationBanned', 'isTrashed', 'isErased', 'isAllowedAdvNotifications']
+        BlogComment::class =>   ['isRemoved'],
+        BlogPost::class =>      ['isPublished', 'isRemoved'],
+        User::class =>          ['isEmailHidden', 'isBanned', 'isCommunicationBanned', 'isRemoved', 'isErased', 'isAllowedAdvNotifications']
     ];
 
     public const TYPES_INTEGER = [
@@ -54,9 +53,9 @@ class AppFixture extends Fixture
     public const TYPES_DATETIME = [];
 
     public const TYPES_DATETIME_MODIFIED = [
-        BlogComment::class =>   ['createdAt', 'updatedAt', 'trashedAt'],
-        BlogPost::class =>      ['createdAt', 'publishedAt', 'updatedAt', 'trashedAt'],
-        User::class =>          ['createdAt', 'updatedAt', 'trashedAt']
+        BlogComment::class =>   ['createdAt', 'updatedAt', 'removedAt'],
+        BlogPost::class =>      ['createdAt', 'publishedAt', 'updatedAt', 'removedAt'],
+        User::class =>          ['createdAt', 'updatedAt', 'removedAt']
     ];
 
     public const TYPES_ENTITY = [

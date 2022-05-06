@@ -45,20 +45,20 @@ class UserRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findNotTrashedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
+    public function findNotRemovedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
     {
         $qb = $this->buildQuery()
             ->andWhere('u.isErased = :isErased')->setParameter('isErased', false)
-            ->andWhere('u.isTrashed = :isTrashed')->setParameter('isTrashed', false);
+            ->andWhere('u.isRemoved = :isRemoved')->setParameter('isRemoved', false);
 
         return new PaginatedCollection($qb, $offset, $limit);
     }
 
-    public function findTrashedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
+    public function findRemovedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
     {
         $qb = $this->buildQuery()
             ->andWhere('u.isErased = :isErased')->setParameter('isErased', false)
-            ->andWhere('u.isTrashed = :isTrashed')->setParameter('isTrashed', true);
+            ->andWhere('u.isRemoved = :isRemoved')->setParameter('isRemoved', true);
 
         return new PaginatedCollection($qb, $offset, $limit);
     }

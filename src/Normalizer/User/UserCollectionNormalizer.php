@@ -8,8 +8,10 @@ use App\Entity\User\User;
 
 class UserCollectionNormalizer extends AbstractCollectionNormalizer
 {
+    protected string $normalizerClass = UserNormalizer::class;
+
     public function __construct(
-        private NormalizerFactory $normalizer
+        protected NormalizerFactory $normalizer
     )
     {}
 
@@ -26,7 +28,7 @@ class UserCollectionNormalizer extends AbstractCollectionNormalizer
     public function normalize($data, array $includes = []): array
     {
         $output = array_map(function (User $user) use ($includes) {
-            return $this->normalizer->normalize(UserNormalizer::class, $user, $includes);
+            return $this->normalizer->normalize($this->normalizerClass, $user, $includes);
         }, $this->extractCollection($data));
 
         return $output;

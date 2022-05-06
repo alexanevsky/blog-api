@@ -26,7 +26,7 @@ class Comment implements EntityInterface
     protected array $content = [];
 
     #[ORM\Column(type: 'boolean')]
-    protected bool $isTrashed = false;
+    protected bool $isRemoved = false;
 
     #[ORM\Column(type: 'datetime')]
     protected \DateTime $createdAt;
@@ -35,7 +35,7 @@ class Comment implements EntityInterface
     protected ?\DateTime $updatedAt = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTime $trashedAt = null;
+    protected ?\DateTime $removedAt = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'childrenComments'), ORM\JoinColumn(onDelete: 'CASCADE')]
     protected ?self $parentComment = null;
@@ -117,14 +117,14 @@ class Comment implements EntityInterface
         return !empty($this->content);
     }
 
-    public function isTrashed(): bool
+    public function isRemoved(): bool
     {
-        return $this->isTrashed;
+        return $this->isRemoved;
     }
 
-    public function setTrashed(bool $isTrashed): self
+    public function setRemoved(bool $isRemoved): self
     {
-        $this->isTrashed = $isTrashed;
+        $this->isRemoved = $isRemoved;
         return $this;
     }
 
@@ -172,26 +172,26 @@ class Comment implements EntityInterface
         return !empty($this->updatedAt);
     }
 
-    public function getTrashedAt(): ?\DateTime
+    public function getRemovedAt(): ?\DateTime
     {
-        return $this->trashedAt;
+        return $this->removedAt;
     }
 
-    public function setTrashedAt(?\DateTime $trashedAt): self
+    public function setRemovedAt(?\DateTime $removedAt): self
     {
-        $this->trashedAt = $trashedAt;
+        $this->removedAt = $removedAt;
         return $this;
     }
 
-    public function setTrashedNow(): self
+    public function setRemovedNow(): self
     {
-        $this->trashedAt = new \DateTime();
+        $this->removedAt = new \DateTime();
         return $this;
     }
 
-    public function hasTrashedAt(): bool
+    public function hasRemovedAt(): bool
     {
-        return !empty($this->trashedAt);
+        return !empty($this->removedAt);
     }
 
     public function getParentComment(): ?self
