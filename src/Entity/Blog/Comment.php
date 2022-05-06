@@ -26,16 +26,16 @@ class Comment implements EntityInterface
     protected array $content = [];
 
     #[ORM\Column(type: 'boolean')]
-    protected bool $isDeleted = false;
+    protected bool $isTrashed = false;
 
     #[ORM\Column(type: 'datetime')]
     protected \DateTime $createdAt;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTime $editedAt = null;
+    protected ?\DateTime $updatedAt = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTime $deletedAt = null;
+    protected ?\DateTime $trashedAt = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'childrenComments'), ORM\JoinColumn(onDelete: 'CASCADE')]
     protected ?self $parentComment = null;
@@ -117,14 +117,14 @@ class Comment implements EntityInterface
         return !empty($this->content);
     }
 
-    public function isDeleted(): bool
+    public function isTrashed(): bool
     {
-        return $this->isDeleted;
+        return $this->isTrashed;
     }
 
-    public function setDeleted(bool $isDeleted): self
+    public function setTrashed(bool $isTrashed): self
     {
-        $this->isDeleted = $isDeleted;
+        $this->isTrashed = $isTrashed;
         return $this;
     }
 
@@ -150,48 +150,48 @@ class Comment implements EntityInterface
         return !empty($this->createdAt);
     }
 
-    public function getEditedAt(): ?\DateTime
+    public function getUpdatedAt(): ?\DateTime
     {
-        return $this->editedAt;
+        return $this->updatedAt;
     }
 
-    public function setEditedAt(?\DateTime $editedAt): self
+    public function setUpdatedAt(?\DateTime $updatedAt): self
     {
-        $this->editedAt = $editedAt;
+        $this->updatedAt = $updatedAt;
         return $this;
     }
 
-    public function setEditedNow(): self
+    public function setUpdatedNow(): self
     {
-        $this->editedAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
         return $this;
     }
 
-    public function hasEditedAt(): bool
+    public function hasUpdatedAt(): bool
     {
-        return !empty($this->editedAt);
+        return !empty($this->updatedAt);
     }
 
-    public function getDeletedAt(): ?\DateTime
+    public function getTrashedAt(): ?\DateTime
     {
-        return $this->deletedAt;
+        return $this->trashedAt;
     }
 
-    public function setDeletedAt(?\DateTime $deletedAt): self
+    public function setTrashedAt(?\DateTime $trashedAt): self
     {
-        $this->deletedAt = $deletedAt;
+        $this->trashedAt = $trashedAt;
         return $this;
     }
 
-    public function setDeletedNow(): self
+    public function setTrashedNow(): self
     {
-        $this->deletedAt = new \DateTime();
+        $this->trashedAt = new \DateTime();
         return $this;
     }
 
-    public function hasDeletedAt(): bool
+    public function hasTrashedAt(): bool
     {
-        return !empty($this->deletedAt);
+        return !empty($this->trashedAt);
     }
 
     public function getParentComment(): ?self

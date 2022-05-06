@@ -9,17 +9,17 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 class UserVoter extends Voter
 {
     public const ATTR_VIEW =    'view';
-    public const ATTR_EDIT =    'edit';
-    public const ATTR_DELETE =  'delete';
+    public const ATTR_UPDATE =  'update';
+    public const ATTR_TRASH =   'trash';
+    public const ATTR_UNTRASH = 'untrash';
     public const ATTR_ERASE =   'erase';
-    public const ATTR_RESTORE = 'restore';
 
     public const ATTRIBUTES = [
         self::ATTR_VIEW,
-        self::ATTR_EDIT,
-        self::ATTR_DELETE,
-        self::ATTR_ERASE,
-        self::ATTR_RESTORE
+        self::ATTR_UPDATE,
+        self::ATTR_TRASH,
+        self::ATTR_UNTRASH,
+        self::ATTR_ERASE
     ];
 
     /**
@@ -52,15 +52,15 @@ class UserVoter extends Voter
 
         switch ($attribute) {
             case self::ATTR_VIEW:
-                return !$subject->isErased() && (!$subject->isDeleted() || $user?->hasAnyRole([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER]));
-            case self::ATTR_EDIT:
-                return !$subject->isErased() && !$subject->isDeleted() && ($user === $subject || $user->hasAnyRole([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER]));
-            case self::ATTR_DELETE:
-                return !$subject->isErased() && !$subject->isDeleted() && $user->hasAnyRole([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER]) && $user !== $subject;
+                return !$subject->isErased() && (!$subject->isTrashed() || $user?->hasAnyRole([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER]));
+            case self::ATTR_UPDATE:
+                return !$subject->isErased() && !$subject->isTrashed() && ($user === $subject || $user->hasAnyRole([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER]));
+            case self::ATTR_TRASH:
+                return !$subject->isErased() && !$subject->isTrashed() && $user->hasAnyRole([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER]) && $user !== $subject;
+            case self::ATTR_UNTRASH:
+                return !$subject->isErased() && $subject->isTrashed() && $user->hasAnyRole([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER]);
             case self::ATTR_ERASE:
                 return !$subject->isErased() && $user->hasAnyRole([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER]) && $user !== $subject;
-            case self::ATTR_RESTORE:
-                return !$subject->isErased() && $subject->isDeleted() && $user->hasAnyRole([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER]);
         }
 
         return false;

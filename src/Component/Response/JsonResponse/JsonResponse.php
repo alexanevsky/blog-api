@@ -3,6 +3,7 @@
 namespace App\Component\Response\JsonResponse;
 
 use Symfony\Component\HttpFoundation\JsonResponse as BaseJsonResponse;
+use Symfony\Component\Translation\TranslatableMessage;
 
 class JsonResponse extends BaseJsonResponse
 {
@@ -33,11 +34,21 @@ class JsonResponse extends BaseJsonResponse
         }
 
         if ($warnings) {
-            $output['warnings'] = $warnings;
+            $output['warnings'] = array_map(function ($warning) {
+                return !$warning instanceof TranslatableMessage ? $warning : [
+                    'message' => $warning->getMessage(),
+                    'parameters' => $warning->getParameters()
+                ];
+            }, $warnings);
         }
 
         if ($errors) {
-            $output['errors'] = $errors;
+            $output['errors'] = array_map(function ($error) {
+                return !$error instanceof TranslatableMessage ? $error : [
+                    'message' => $error->getMessage(),
+                    'parameters' => $error->getParameters()
+                ];
+            }, $errors);
         }
 
         parent::__construct($output, $status, $headers);

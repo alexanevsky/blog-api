@@ -8,10 +8,10 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class SecurityVoter extends Voter
 {
-    public const ATTR_ADD_USER = 'add_user';
+    public const ATTR_CREATE_USER = 'create_user';
 
     public const ATTRIBUTES = [
-        self::ATTR_ADD_USER
+        self::ATTR_CREATE_USER
     ];
 
     protected function supports($attribute, $subject = null): bool
@@ -34,7 +34,7 @@ class SecurityVoter extends Voter
         }
 
         switch ($attribute) {
-            case self::ATTR_ADD_USER:
+            case self::ATTR_CREATE_USER:
                 return $user->hasAnyRole([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER]);
         }
 

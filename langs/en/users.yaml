@@ -1,12 +1,47 @@
 messages:
-    banned_users:
-        access_denied:  'You do not have access to the list of banned users.'
-
-    deleted_users:
-        access_denied:  'You do not have access to the list of deleted users.'
+    trash:
+        access_denied:  'You do not have access to the list of trashed users.'
 
     user:
         not_found:      'User not found.'
         erased:         'The user has been deleted.'
-        deleted:        'The user has been deleted.'
+        trashed:        'The user has been deleted.'
         access_denied:  'You do not have access to this user.'
+
+    user_create:
+        created:        'New user creates successfully.'
+        failed:         'The user was not created due to an error in the given data.'
+        access_denied:  'You do not have access to create new user.'
+
+    user_update:
+        updated:        'The user updated successfully.'
+        failed:         'The user was not updated due to an error in the given data.'
+        access_denied:  'You do not have access to update this user.'
+
+    user_trash:
+        trashed:        'The user was successfully moved to the trash.'
+        access_denied:  'You do not have access to move to trash this user.'
+
+    user_untrash:
+        untrashed:      'The user was successfully removed from the trash.'
+        access_denied:  'You do not have access to remove from trash this user.'
+
+    user_erase:
+        erased:         'The user was successfully erased.'
+        access_denied:  'You do not have access to erase this user.'
+
+errors:
+    alias:
+        numeric:    'Alias can not be numeric.'
+        short:      'Alias should have {limit} character or more.'
+        long:       'Alias should have {limit} character or less.'
+        exists:     'A user with given alias already exists.'
+    email:
+        empty:      'Email can not be empty.'
+        exists:     'A user with given email already exists.'
+    password:
+        short:  'Password should have {limit} character or more.'
+    roles:
+        invalid:    'Given roles are invalid.'
+    birthdate:
+        incorrect:  'Given date of birth is invalid.'

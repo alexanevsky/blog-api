@@ -123,7 +123,7 @@ class User implements EntityInterface, UserInterface
     protected bool $isCommunicationBanned = false;
 
     #[ORM\Column(type: 'boolean')]
-    protected bool $isDeleted = false;
+    protected bool $isTrashed = false;
 
     #[ORM\Column(type: 'boolean')]
     protected bool $isErased = false;
@@ -137,14 +137,18 @@ class User implements EntityInterface, UserInterface
     #[ORM\Column(type: 'integer')]
     protected int $sorting = 0;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?User $createdBy = null;
+
     #[ORM\Column(type: 'datetime')]
     protected \DateTime $createdAt;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTime $editedAt = null;
+    protected ?\DateTime $updatedAt = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTime $deletedAt = null;
+    protected ?\DateTime $trashedAt = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?\DateTime $erasedAt = null;
@@ -443,14 +447,14 @@ class User implements EntityInterface, UserInterface
         return $this;
     }
 
-    public function isDeleted(): bool
+    public function isTrashed(): bool
     {
-        return $this->isDeleted;
+        return $this->isTrashed;
     }
 
-    public function setDeleted(bool $isDeleted): self
+    public function setTrashed(bool $isTrashed): self
     {
-        $this->isDeleted = $isDeleted;
+        $this->isTrashed = $isTrashed;
         return $this;
     }
 
@@ -562,6 +566,22 @@ class User implements EntityInterface, UserInterface
         return !empty($this->sorting);
     }
 
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+        return $this;
+    }
+
+    public function hasCreatedBy(): bool
+    {
+        return !empty($this->createdBy);
+    }
+
     public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
@@ -584,48 +604,48 @@ class User implements EntityInterface, UserInterface
         return !empty($this->createdAt);
     }
 
-    public function getEditedAt(): ?\DateTime
+    public function getUpdatedAt(): ?\DateTime
     {
-        return $this->editedAt;
+        return $this->updatedAt;
     }
 
-    public function setEditedAt(?\DateTime $editedAt): self
+    public function setUpdatedAt(?\DateTime $updatedAt): self
     {
-        $this->editedAt = $editedAt;
+        $this->updatedAt = $updatedAt;
         return $this;
     }
 
-    public function setEditedNow(): self
+    public function setUpdatedNow(): self
     {
-        $this->editedAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
         return $this;
     }
 
-    public function hasEditedAt(): bool
+    public function hasUpdatedAt(): bool
     {
-        return !empty($this->editedAt);
+        return !empty($this->updatedAt);
     }
 
-    public function getDeletedAt(): ?\DateTime
+    public function getTrashedAt(): ?\DateTime
     {
-        return $this->deletedAt;
+        return $this->trashedAt;
     }
 
-    public function setDeletedAt(?\DateTime $deletedAt): self
+    public function setTrashedAt(?\DateTime $trashedAt): self
     {
-        $this->deletedAt = $deletedAt;
+        $this->trashedAt = $trashedAt;
         return $this;
     }
 
-    public function setDeletedNow(): self
+    public function setTrashedNow(): self
     {
-        $this->deletedAt = new \DateTime();
+        $this->trashedAt = new \DateTime();
         return $this;
     }
 
-    public function hasDeletedAt(): bool
+    public function hasTrashedAt(): bool
     {
-        return !empty($this->deletedAt);
+        return !empty($this->trashedAt);
     }
 
     public function getErasedAt(): ?\DateTime
@@ -682,7 +702,7 @@ class User implements EntityInterface, UserInterface
         $this->firstIp = '';
         $this->isBanned = false;
         $this->isCommunicationBanned = false;
-        $this->isDeleted = true;
+        $this->isTrashed = true;
         $this->isErased = true;
         $this->isAllowedAdvNotifications = false;
         $this->roles = [self::DEFAULT_ROLE];
@@ -695,8 +715,8 @@ class User implements EntityInterface, UserInterface
         if ($setErasedAt) {
             $this->erasedAt = new \DateTime();
 
-            if (!$this->deletedAt) {
-                $this->deletedAt = $this->erasedAt;
+            if (!$this->trashedAt) {
+                $this->trashedAt = $this->erasedAt;
             }
         }
     }

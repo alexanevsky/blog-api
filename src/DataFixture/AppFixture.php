@@ -30,9 +30,9 @@ class AppFixture extends Fixture
 
     public const TYPES_BOOLEAN = [
         BlogCategory::class =>  ['isActive'],
-        BlogComment::class =>   ['isDeleted'],
-        BlogPost::class =>      ['isPublished', 'isDeleted'],
-        User::class =>          ['isEmailHidden', 'isBanned', 'isCommunicationBanned', 'isDeleted', 'isErased', 'isAllowedAdvNotifications']
+        BlogComment::class =>   ['isTrashed'],
+        BlogPost::class =>      ['isPublished', 'isTrashed'],
+        User::class =>          ['isEmailHidden', 'isBanned', 'isCommunicationBanned', 'isTrashed', 'isErased', 'isAllowedAdvNotifications']
     ];
 
     public const TYPES_INTEGER = [
@@ -56,9 +56,9 @@ class AppFixture extends Fixture
     ];
 
     public const TYPES_DATETIME_MODIFIED = [
-        BlogComment::class =>   ['createdAt', 'editedAt', 'deletedAt'],
-        BlogPost::class =>      ['createdAt', 'publishedAt', 'editedAt', 'deletedAt'],
-        User::class =>          ['createdAt', 'editedAt', 'deletedAt']
+        BlogComment::class =>   ['createdAt', 'updatedAt', 'trashedAt'],
+        BlogPost::class =>      ['createdAt', 'publishedAt', 'updatedAt', 'trashedAt'],
+        User::class =>          ['createdAt', 'updatedAt', 'trashedAt']
     ];
 
     public const TYPES_ENTITY = [

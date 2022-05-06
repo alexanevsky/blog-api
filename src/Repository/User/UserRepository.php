@@ -45,30 +45,20 @@ class UserRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findNotDeletedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
+    public function findNotTrashedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
     {
         $qb = $this->buildQuery()
             ->andWhere('u.isErased = :isErased')->setParameter('isErased', false)
-            ->andWhere('u.isDeleted = :isDeleted')->setParameter('isDeleted', false);
+            ->andWhere('u.isTrashed = :isTrashed')->setParameter('isTrashed', false);
 
         return new PaginatedCollection($qb, $offset, $limit);
     }
 
-    public function findDeletedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
+    public function findTrashedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
     {
         $qb = $this->buildQuery()
             ->andWhere('u.isErased = :isErased')->setParameter('isErased', false)
-            ->andWhere('u.isDeleted = :isDeleted')->setParameter('isDeleted', true);
-
-        return new PaginatedCollection($qb, $offset, $limit);
-    }
-
-    public function findNotDeletedBannedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
-    {
-        $qb = $this->buildQuery()
-            ->andWhere('u.isErased = :isErased')->setParameter('isErased', false)
-            ->andWhere('u.isDeleted = :isDeleted')->setParameter('isDeleted', false)
-            ->andWhere('u.isBanned = :isBanned')->setParameter('isBanned', true);
+            ->andWhere('u.isTrashed = :isTrashed')->setParameter('isTrashed', true);
 
         return new PaginatedCollection($qb, $offset, $limit);
     }

@@ -30,7 +30,7 @@ class UserResolverBuilder
         'is_banned' =>                      'boolean',
         'is_communication_banned' =>        'boolean',
         'is_allowed_adv_notifications' =>   'boolean',
-        'roles' =>                          'string'
+        'roles' =>                          'string[]'
     ];
 
     private const NULLABLE_OPTIONS = [
@@ -137,6 +137,8 @@ class UserResolverBuilder
 
         if (!$this->security->isGranted(User::ROLE_ADMIN) && !$this->security->isGranted(User::ROLE_USERS_MANAGER)) {
             unset($options['roles']);
+            unset($options['is_banned']);
+            unset($options['is_communication_banned']);
         }
 
         return $options;
@@ -189,10 +191,10 @@ class UserResolverBuilder
             ],
             'email' => [
                 $this->constraints->notBlank('users.errors.email.empty'),
-                $this->constraints->email('users.errors.email.incorrect')
+                $this->constraints->email()
             ],
             'website' => [
-                $this->constraints->url('users.errors.website.incorrect')
+                $this->constraints->url()
             ],
             'password' => [
                 $this->constraints->minLength(User::PASSWORD_MINLENGTH, 'users.errors.password.short')
@@ -219,7 +221,7 @@ class UserResolverBuilder
                 }
             ],
             'email' => [
-                'users.errors.alias.exists' => function ($email, $default) use ($user) {
+                'users.errors.email.exists' => function ($email, $default) use ($user) {
                     $found = (!$email || $email === $default) ? null : $this->usersRepository->findOneBy(['email' => $email]);
 
                     return (!$found || $found === $user) ? true : false;
@@ -227,7 +229,7 @@ class UserResolverBuilder
             ],
             'birthdate' => [
                 'users.errors.birthdate.incorrect' => function ($birthdate) {
-                    return !$birthdate || preg_match('/^\d{4}-\d{2}-\d{2}$/i', $birthdate) ? true : false;
+                    return empty($birthdate) || 1 === preg_match('/^\d{4}-\d{2}-\d{2}$/i', $birthdate) ? true : false;
                 }
             ]
         ];

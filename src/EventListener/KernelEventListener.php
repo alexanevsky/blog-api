@@ -70,7 +70,7 @@ class KernelEventListener
         if (!empty($data['errors'])) {
             foreach ($data['errors'] as $key => $error) {
                 if (is_array($error) && isset($error['message'])) {
-                    $data['errors'][$key] = $this->translator->trans($error['message'], $error['message_parameters'] ?? []);
+                    $data['errors'][$key] = $this->translator->trans($error['message'], $error['parameters'] ?? []);
                 } elseif (is_string($error) && 1 === preg_match('/^([\a-z\d\.]+)$/u', $error)) {
                     $data['errors'][$key] = $this->translator->trans($error);
                 }
@@ -81,7 +81,7 @@ class KernelEventListener
         if (!empty($data['warnings'])) {
             foreach ($data['warnings'] as $key => $warning) {
                 if (is_array($warning) && isset($warning['message'])) {
-                    $data['warnings'][$key] = $this->translator->trans($warning['message'], $warning['message_parameters'] ?? []);
+                    $data['warnings'][$key] = $this->translator->trans($warning['message'], $warning['parameters'] ?? []);
                 } elseif (is_string($warning) && 1 === preg_match('/^([\a-z\d\.]+)$/u', $warning)) {
                     $data['warnings'][$key] = $this->translator->trans($warning);
                 }
