@@ -9,12 +9,16 @@ use App\Component\Response\JsonResponse\JsonResponse;
 use App\Component\Response\JsonResponse\NotFoundResponse;
 use App\Component\Response\JsonResponse\SuccessResponse;
 use App\Controller\AbstractController;
+use App\Entity\Blog\Comment;
 use App\Entity\Blog\Post;
 use App\Entity\User\User;
-use App\Normalizer\Blog\PostCollectionNormalizer;
+use App\Normalizer\Blog\CommentCollectionNormalizer;
+use App\Normalizer\Blog\CommentNormalizer;
 use App\Normalizer\Blog\PostMainCollectionNormalizer;
 use App\Normalizer\Blog\PostNormalizer;
+use App\Repository\Blog\CommentRepository;
 use App\Repository\Blog\PostRepository;
+use App\Resolver\Blog\CommentResolverBuilder;
 use App\Resolver\Blog\PostResolverBuilder;
 use App\Security\Voter\Blog\PostVoter;
 use App\Security\Voter\SecurityVoter;
@@ -24,8 +28,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class PostController extends AbstractController
 {
     public function __construct(
-        private PostRepository      $postsRepository,
-        private PostResolverBuilder $postResolverBuilder
+        private CommentRepository       $commentsRepository,
+        private CommentResolverBuilder  $commentResolverBuilder,
+        private PostRepository          $postsRepository,
+        private PostResolverBuilder     $postResolverBuilder
     )
     {}
 
@@ -43,6 +49,7 @@ class PostController extends AbstractController
             'posts' => $this->normalize(PostMainCollectionNormalizer::class, $posts, [
                 'author',
                 'categories',
+                'comments_count',
                 'permissions'
             ]),
             'posts_meta' => $posts->getMeta()
@@ -67,6 +74,7 @@ class PostController extends AbstractController
             'posts' => $this->normalize(PostMainCollectionNormalizer::class, $posts, [
                 'author',
                 'categories',
+                'comments_count',
                 'permissions'
             ]),
             'posts_meta' => $posts->getMeta()
@@ -91,13 +99,14 @@ class PostController extends AbstractController
             'posts' => $this->normalize(PostMainCollectionNormalizer::class, $posts, [
                 'author',
                 'categories',
+                'comments_count',
                 'permissions'
             ]),
             'posts_meta' => $posts->getMeta()
         ]);
     }
 
-    #[Route(path: '/{id<[\d]+>}', methods: ['GET'], priority: -1)]
+    #[Route(path: '/{id<[\d]+>}', methods: ['GET'])]
     public function post(int $id): JsonResponse
     {
         $post = $this->postsRepository->findOneById($id);
@@ -116,6 +125,7 @@ class PostController extends AbstractController
             'post' => $this->normalize(PostNormalizer::class, $post, [
                 'author',
                 'categories',
+                'comments_count',
                 'permissions'
             ])
         ]);
@@ -123,7 +133,7 @@ class PostController extends AbstractController
 
     #[Route(path: '', methods: ['POST'])]
     #[Route(path: '/create', methods: ['GET', 'POST'])]
-    public function createPost(): JsonResponse
+    public function create(): JsonResponse
     {
         if (!$this->isGranted(SecurityVoter::ATTR_CREATE_BLOG_POST)) {
             return new AccessDeniedResponse('blog_posts.messages.post_create.access_denied', needAuth: !$this->isLogged());
@@ -256,5 +266,67 @@ class PostController extends AbstractController
         $this->getDoctrineManager()->flush();
 
         return new SuccessResponse('blog_posts.messages.post_delete.deleted');
+    }
+
+    #[Route(path: '/{id<[\d]+>}/comments', methods: ['GET'])]
+    public function comments(int $id): JsonResponse
+    {
+        $post = $this->postsRepository->findOneById($id);
+
+        if (!$post) {
+            return new NotFoundResponse('blog_posts.messages.post.not_found');
+        } elseif (!$this->isGranted(PostVoter::ATTR_VIEW, $post)) {
+            return new AccessDeniedResponse('blog_posts.messages.post.access_denied', needAuth: !$this->isLogged());
+        }
+
+        $comments = $this->commentsRepository->findByPost($post);
+
+        return new SuccessResponse(data: [
+            'comments' => $this->normalize(CommentCollectionNormalizer::class, $comments, [
+                'author',
+                'parent_comment',
+                'permissions'
+            ])
+        ]);
+    }
+
+    #[Route(path: '/{id<[\d]+>}/comments', methods: ['POST'])]
+    #[Route(path: '/{id<[\d]+>}/comments/add', methods: ['GET', 'POST'])]
+    public function addComment(int $id): JsonResponse
+    {
+        $post = $this->postsRepository->findOneById($id);
+
+        if (!$post) {
+            return new NotFoundResponse('blog_posts.messages.post.not_found');
+        } elseif (!$this->isGranted(PostVoter::ATTR_CREATE_COMMENT, $post)) {
+            return new AccessDeniedResponse('blog_comments.messages.comment_create.access_denied', needAuth: !$this->isLogged());
+        }
+
+        $comment = new Comment();
+        $resolver = $this->commentResolverBuilder->build($comment);
+
+        if ($this->isRequestMethod('GET')) {
+            return new SuccessResponse(data: [
+                'fields' => $resolver->getRequirements()
+            ]);
+        }
+
+        $result = $resolver->resolve($this->decodeRequest());
+
+        if (!$result->isValid()) {
+            return new FailureResponse('blog_comments.messages.comment_create.failed', errors: $result->getFirstErrors());
+        }
+
+        $result->handleEntity();
+
+        $comment->setPost($post);
+        $comment->setAuthor($this->getUser());
+
+        $this->getDoctrineManager()->persist($comment);
+        $this->getDoctrineManager()->flush();
+
+        return new SuccessResponse('blog_comments.messages.comment_create.created', data: [
+            'comment' => $this->normalize(CommentNormalizer::class, $comment)
+        ]);
     }
 }

@@ -167,6 +167,7 @@ class CategoryController extends AbstractController
             'posts' => $this->normalize(PostMainCollectionNormalizer::class, $posts, [
                 'author',
                 'categories',
+                'comments_count',
                 'permissions'
             ]),
             'posts_meta' => $posts->getMeta()

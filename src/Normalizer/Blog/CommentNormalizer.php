@@ -5,13 +5,13 @@ namespace App\Normalizer\Blog;
 use App\Component\Normalizer\AbstractNormalizer;
 use App\Component\Normalizer\NormalizerFactory;
 use App\Entity\Blog\Category;
-use App\Entity\Blog\Post;
+use App\Entity\Blog\Comment;
 use App\Normalizer\User\UserPrimaryNormalizer;
 use App\Security\Voter\Blog\CategoryVoter;
-use App\Security\Voter\Blog\PostVoter;
+use App\Security\Voter\Blog\CommentVoter;
 use Symfony\Component\Security\Core\Security;
 
-class PostNormalizer extends AbstractNormalizer
+class CommentNormalizer extends AbstractNormalizer
 {
     public function __construct(
         protected NormalizerFactory $normalizer,
@@ -21,25 +21,19 @@ class PostNormalizer extends AbstractNormalizer
 
     public function supports($data): bool
     {
-        return $data instanceof Post;
+        return $data instanceof Comment;
     }
 
     /**
-     * @param Post $data
+     * @param Comment $data
      */
     public function normalize($data, array $includes = []): array
     {
         $output = [
             'id' =>             $data->getId(),
-            'title' =>          $data->getTitle(),
-            'alias' =>          $data->getAlias(),
-            'description' =>    $data->getDescription(),
-            'content' =>        $data->getContent(),
-            'image' =>          $data->getImage(),
-            'is_published' =>   $data->isPublished(),
+            'content' =>        !$data->isRemoved() || $this->security->isGranted(CommentVoter::ATTR_VIEW, $data) ? $data->getContent() : null,
             'is_removed' =>     $data->isRemoved(),
             'created_at' =>     $data->getCreatedAt()?->format('c'),
-            'published_at' =>   $data->getPublishedAt()?->format('c'),
             'updated_at' =>     $data->getUpdatedAt()?->format('c'),
             'deleted_at' =>     $data->getRemovedAt()?->format('c')
         ];
@@ -50,25 +44,22 @@ class PostNormalizer extends AbstractNormalizer
                 : $this->normalizer->normalize(UserPrimaryNormalizer::class, $data->getAuthor(), $this->extractIncludes($includes, 'author'));
         }
 
-        if (in_array('categories', $includes)) {
-            $output['categories'] = array_values(array_map(
-                function (Category $category) use ($includes) {
-                    return $this->normalizer->normalize(CategoryNormalizer::class, $category, $this->extractIncludes($includes, 'categories'));
-                },
-                array_filter($data->getCategories()->toArray(), function (Category $category) {
-                    return $this->security->isGranted(CategoryVoter::ATTR_VIEW, $category);
-                })
-            ));
+        if (in_array('post', $includes)) {
+            $output['post'] = $this->normalizer->normalize(PostMainNormalizer::class, $data->getPost(), $this->extractIncludes($includes, 'post'));
         }
 
-        if (in_array('comments_count', $includes)) {
-            $output['comments_count'] = $data->getComments()->count();
+        if (in_array('parent_comment', $includes)) {
+            $output['parent_comment'] = $this->normalizer->normalize(CommentNormalizer::class, $data->getParentComment(), $this->extractIncludes($includes, 'parent_comment'));
+        }
+
+        if (in_array('children_comments', $includes)) {
+            $output['children_comments'] = $this->normalizer->normalize(CommentCollectionNormalizer::class, $data->getChildrenComments(), $this->extractIncludes($includes, 'children_comments'));
         }
 
         if (in_array('permissions', $includes)) {
-            $output['permissions'] = array_combine(PostVoter::ATTRIBUTES, array_map(function (string $attribute) use ($data) {
+            $output['permissions'] = array_combine(CommentVoter::ATTRIBUTES, array_map(function (string $attribute) use ($data) {
                 return $this->security->isGranted($attribute, $data);
-            }, PostVoter::ATTRIBUTES));
+            }, CommentVoter::ATTRIBUTES));
         }
 
         return $output;

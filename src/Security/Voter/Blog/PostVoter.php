@@ -9,12 +9,12 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class PostVoter extends Voter
 {
-    public const ATTR_VIEW =        'view';
-    public const ATTR_UPDATE =      'update';
-    public const ATTR_REMOVE =      'remove';
-    public const ATTR_RESTORE =     'restore';
-    public const ATTR_DELETE =      'delete';
-    public const ATTR_ADD_COMMENT = 'add_comment';
+    public const ATTR_VIEW =            'view';
+    public const ATTR_UPDATE =          'update';
+    public const ATTR_REMOVE =          'remove';
+    public const ATTR_RESTORE =         'restore';
+    public const ATTR_DELETE =          'delete';
+    public const ATTR_CREATE_COMMENT =  'create_comment';
 
     public const ATTRIBUTES = [
         self::ATTR_VIEW,
@@ -22,7 +22,7 @@ class PostVoter extends Voter
         self::ATTR_REMOVE,
         self::ATTR_RESTORE,
         self::ATTR_DELETE,
-        self::ATTR_ADD_COMMENT
+        self::ATTR_CREATE_COMMENT
     ];
 
     /**
@@ -64,7 +64,7 @@ class PostVoter extends Voter
                 return $subject->isRemoved() && $this->canManipulate($subject, $user);
             case self::ATTR_DELETE:
                 return $this->canManipulate($subject, $user);
-            case self::ATTR_ADD_COMMENT:
+            case self::ATTR_CREATE_COMMENT:
                 return !$user->isCommunicationBanned() && $this->canView($subject, $user);
         }
 

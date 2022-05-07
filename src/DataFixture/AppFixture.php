@@ -18,7 +18,7 @@ class AppFixture extends Fixture
         User::class =>          'users',
         BlogCategory::class =>  'blog_categories',
         BlogPost::class =>      'blog_posts',
-        // BlogComment::class =>   'blog_comments'
+        BlogComment::class =>   'blog_comments'
     ];
 
     public const SETTERS = [
