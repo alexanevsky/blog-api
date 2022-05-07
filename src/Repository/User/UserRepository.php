@@ -45,6 +45,18 @@ class UserRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @return User[]
+     */
+    public function findRemovedBefore(\DateTime $datetime): array
+    {
+        $qb = $this->buildQuery()
+            ->andWhere('u.isRemoved = :isRemoved')->setParameter('isRemoved', true)
+            ->andWhere('u.removedAt <= :removedAt')->setParameter('removedAt', $datetime);
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function findNotRemovedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
     {
         $qb = $this->buildQuery()

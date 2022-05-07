@@ -34,6 +34,18 @@ class PostRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @return Post[]
+     */
+    public function findRemovedBefore(\DateTime $datetime): array
+    {
+        $qb = $this->buildQuery()
+            ->andWhere('p.isRemoved = :isRemoved')->setParameter('isRemoved', true)
+            ->andWhere('p.removedAt <= :removedAt')->setParameter('removedAt', $datetime);
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function findPublishedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
     {
         $qb = $this->buildQuery()
