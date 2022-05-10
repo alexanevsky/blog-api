@@ -1,4 +1,8 @@
 parameters:
+    # Common
+    app.base_url:   '%env(ROUTER_BASE_URL)%'
+    app.sitename:   'Demo App'
+
     # Json Web Token parameters
     app.jwt.access_token_ttl:   '%env(int:JWT_ACCESS_TOKEN_TTL)%'
     app.jwt.refresh_token_ttl:  '%env(int:JWT_REFRESH_TOKEN_TTL)%'

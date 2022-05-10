@@ -1,0 +1,5 @@
+messages:
+    lang_not_found: 'Language "{lang}" not found.'
+
+    generate:
+        generated:  'Translations messages generated successfully.'
