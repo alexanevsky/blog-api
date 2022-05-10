@@ -163,8 +163,8 @@ class CommentController extends AbstractController
             return new AccessDeniedResponse('blog_comments.messages.comment_delete.access_denied', needAuth: !$this->isLogged());
         }
 
-        foreach ($comment->getChildrenComments()->toArray() as $comment) {
-            $this->getDoctrineManager()->remove($comment);
+        foreach ($comment->getChildrenComments()->toArray() as $child) {
+            $this->getDoctrineManager()->remove($child);
         }
 
         $this->getDoctrineManager()->remove($comment);
