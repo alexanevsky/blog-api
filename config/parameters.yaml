@@ -54,6 +54,9 @@ parameters:
         telegram:     '^(?:(?:.+)(?:com|me))*(?:\/)*(\w+)(?:.*)$'
 
     # Blog posts config options
+    app.blog_posts.posts_layout:        'sidebar' # sidebar || fullwidth || grid
+    app.blog_posts.posts_item_layout:   'left' # top_full || top || left_full || left
+    app.blog_posts.post_layout:         'sidebar' # sidebar || fullwidth
     app.blog_posts.restore_days_limit:   30
 
     # Users config options
