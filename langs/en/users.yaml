@@ -2,6 +2,9 @@ messages:
     removed_users:
         access_denied:  'You do not have access to the list of removed users.'
 
+    banned_users:
+        access_denied:  'You do not have access to the list of banned users.'
+
     user:
         not_found:      'User not found.'
         erased:         'The user has been deleted.'

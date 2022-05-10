@@ -66,6 +66,26 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route(path: '/banned', methods: ['GET'])]
+    public function banned(): JsonResponse
+    {
+        if (!$this->isGrantedAny([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER])) {
+            return new AccessDeniedResponse('users.messages.banned_users.access_denied', needAuth: !$this->isLogged());
+        }
+
+        [$usersOffset, $usersLimit] = [
+            (int) $this->getQueryParameter('offset', 0),
+            (int) $this->getQueryParameter('limit', UserRepository::PAGE_LIMIT)
+        ];
+
+        $users = $this->usersRepository->findBannedNotRemovedPaginated($usersOffset, $usersLimit);
+
+        return new SuccessResponse(data: [
+            'users' => $this->normalize(UserCollectionNormalizer::class, $users, ['permissions']),
+            'users_meta' => $users->getMeta()
+        ]);
+    }
+
     #[Route(path: '/{id<[\w-]+>}', methods: ['GET'], priority: -1)]
     public function user(int|string $id): JsonResponse
     {

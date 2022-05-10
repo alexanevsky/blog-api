@@ -57,6 +57,16 @@ class UserRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findBannedNotRemovedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
+    {
+        $qb = $this->buildQuery()
+            ->andWhere('u.isBanned = :isBanned')->setParameter('isBanned', true)
+            ->andWhere('u.isErased = :isErased')->setParameter('isErased', false)
+            ->andWhere('u.isRemoved = :isRemoved')->setParameter('isRemoved', false);
+
+        return new PaginatedCollection($qb, $offset, $limit);
+    }
+
     public function findNotRemovedPaginated(int $offset = 0, int $limit = self::PAGE_LIMIT): PaginatedCollection
     {
         $qb = $this->buildQuery()
