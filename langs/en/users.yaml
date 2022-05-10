@@ -1,8 +1,8 @@
 messages:
-    removed_users:
+    users_removed:
         access_denied:  'You do not have access to the list of removed users.'
 
-    banned_users:
+    users_banned:
         access_denied:  'You do not have access to the list of banned users.'
 
     user:

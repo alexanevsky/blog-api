@@ -50,7 +50,7 @@ class UserController extends AbstractController
     public function removed(): JsonResponse
     {
         if (!$this->isGrantedAny([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER])) {
-            return new AccessDeniedResponse('users.messages.removed_users.access_denied', needAuth: !$this->isLogged());
+            return new AccessDeniedResponse('users.messages.users_removed.access_denied', needAuth: !$this->isLogged());
         }
 
         [$usersOffset, $usersLimit] = [
@@ -70,7 +70,7 @@ class UserController extends AbstractController
     public function banned(): JsonResponse
     {
         if (!$this->isGrantedAny([User::ROLE_ADMIN, User::ROLE_USERS_MANAGER])) {
-            return new AccessDeniedResponse('users.messages.banned_users.access_denied', needAuth: !$this->isLogged());
+            return new AccessDeniedResponse('users.messages.users_banned.access_denied', needAuth: !$this->isLogged());
         }
 
         [$usersOffset, $usersLimit] = [

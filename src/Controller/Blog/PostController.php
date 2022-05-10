@@ -60,7 +60,7 @@ class PostController extends AbstractController
     public function unpublished(): JsonResponse
     {
         if (!$this->isGrantedAny([User::ROLE_ADMIN, User::ROLE_BLOG_MANAGER])) {
-            return new AccessDeniedResponse('blog_posts.messages.unpublished_posts.access_denied', needAuth: !$this->isLogged());
+            return new AccessDeniedResponse('blog_posts.messages.posts_unpublished.access_denied', needAuth: !$this->isLogged());
         }
 
         [$postsOffset, $postsLimit] = [
@@ -85,7 +85,7 @@ class PostController extends AbstractController
     public function removed(): JsonResponse
     {
         if (!$this->isGrantedAny([User::ROLE_ADMIN, User::ROLE_BLOG_MANAGER])) {
-            return new AccessDeniedResponse('blog_posts.messages.removed_posts.access_denied', needAuth: !$this->isLogged());
+            return new AccessDeniedResponse('blog_posts.messages.posts_removed.access_denied', needAuth: !$this->isLogged());
         }
 
         [$postsOffset, $postsLimit] = [

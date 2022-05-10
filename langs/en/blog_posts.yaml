@@ -1,8 +1,8 @@
 messages:
-    removed_posts:
+    posts_removed:
         access_denied:  'You do not have access to the list of removed posts.'
 
-    unpublished_posts:
+    posts_unpublished:
         access_denied:  'You do not have access to the list of unpublished posts.'
 
     post:
