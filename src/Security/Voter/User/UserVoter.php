@@ -42,7 +42,7 @@ class UserVoter extends Voter
         /** @var User|null */
         $user = $token->getUser() ?: null;
 
-        if (!$user instanceof User) {
+        if (!$subject instanceof User) {
             return false;
         } elseif (!in_array($attribute, self::ATTRIBUTES, true)) {
             return false;
