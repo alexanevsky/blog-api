@@ -49,7 +49,7 @@ class CategoryVoter extends Voter
 
         switch ($attribute) {
             case self::ATTR_VIEW:
-                return $subject->isActive() || $user?->hasAnyRole([User::ROLE_ADMIN, User::ROLE_BLOG_MANAGER]);
+                return $subject->isActive() || $user?->hasAnyRole([User::ROLE_ADMIN, User::ROLE_BLOG_AUTHOR, User::ROLE_BLOG_MANAGER]);
             case self::ATTR_UPDATE:
             case self::ATTR_DELETE:
                 return $user->hasAnyRole([User::ROLE_ADMIN, User::ROLE_BLOG_MANAGER]);

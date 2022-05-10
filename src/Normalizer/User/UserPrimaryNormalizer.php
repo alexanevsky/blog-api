@@ -11,6 +11,7 @@ class UserPrimaryNormalizer extends UserNormalizer
             'username' =>   $data->getUsername(),
             'alias' =>      $data->getAlias(),
             'avatar' =>     $data->getAvatar(),
+            'avatar_url' => !$data->hasAvatar() ? '' : sprintf('%s/uploads/users/avatars/%s', $this->parameters->get('app.base_url'), $data->getAvatar()),
             'title' =>      $data->getTitle()
         ];
 

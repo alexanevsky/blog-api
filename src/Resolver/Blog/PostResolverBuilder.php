@@ -84,7 +84,7 @@ class PostResolverBuilder
     {
         $normalizers = [
             'alias' => function ($alias) {
-                return !$alias ? null : strtolower($this->slugger->slug($alias)->toString());
+                return !$alias ? '' : strtolower($this->slugger->slug($alias)->toString());
             },
             'categories' => function (array $categories) {
                 return array_filter(array_map(function ($category) {
@@ -99,10 +99,10 @@ class PostResolverBuilder
     private function getDefaultConverter(string $name, Post $post): ?\Closure
     {
         $converters = [
-            'categories' => function (Collection $categories) {
+            'categories' => function (Collection|array $categories) {
                 return array_values(array_map(function (Category $category) {
                     return $category->getId();
-                }, $categories->toArray()));
+                }, $categories instanceof Collection ? $categories->toArray() : $categories));
             }
         ];
 

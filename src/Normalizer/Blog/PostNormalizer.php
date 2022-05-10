@@ -9,13 +9,15 @@ use App\Entity\Blog\Post;
 use App\Normalizer\User\UserPrimaryNormalizer;
 use App\Security\Voter\Blog\CategoryVoter;
 use App\Security\Voter\Blog\PostVoter;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Security\Core\Security;
 
 class PostNormalizer extends AbstractNormalizer
 {
     public function __construct(
-        protected NormalizerFactory $normalizer,
-        protected Security          $security
+        protected ContainerBagInterface $parameters,
+        protected NormalizerFactory     $normalizer,
+        protected Security              $security
     )
     {}
 
@@ -36,6 +38,7 @@ class PostNormalizer extends AbstractNormalizer
             'description' =>    $data->getDescription(),
             'content' =>        $data->getContent(),
             'image' =>          $data->getImage(),
+            'image_url' =>      !$data->hasImage() ? '' : sprintf('%s/uploads/blog/posts/images/%s', $this->parameters->get('app.base_url'), $data->getImage()),
             'is_published' =>   $data->isPublished(),
             'is_removed' =>     $data->isRemoved(),
             'created_at' =>     $data->getCreatedAt()?->format('c'),

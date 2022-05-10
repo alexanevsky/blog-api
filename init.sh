@@ -5,6 +5,9 @@ sudo chmod 777 -R var
 
 sudo chmod 777 translations
 
+mkdir -p public/uploads
+sudo chmod 777 -R public/uploads
+
 cp .env .env.local
 
 composer install --optimize-autoloader
