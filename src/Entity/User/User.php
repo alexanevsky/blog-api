@@ -320,7 +320,7 @@ class User implements EntityInterface, UserInterface
 
     public function setBirthdate(?string $birthdate): self
     {
-        $this->birthdate = $birthdate;
+        $this->birthdate = $birthdate ?: null;
         return $this;
     }
 

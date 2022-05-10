@@ -158,6 +158,9 @@ class UserResolverBuilder
                 $contacts = $this->contactConverter->convertArray($contacts);
 
                 return $contacts;
+            },
+            'birthdate' => function ($birthdate) {
+                return $birthdate ?: null;
             }
         ];
 

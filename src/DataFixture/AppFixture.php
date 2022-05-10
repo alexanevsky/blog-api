@@ -127,8 +127,13 @@ class AppFixture extends Fixture
                     $property = array_search($i, $keys);
                     $value = trim($value);
 
+                    // Convert null
+                    if ('null' === strtolower($value)) {
+                        $value = null;
+                    }
+
                     // Convert boolean
-                    if (in_array($property, self::TYPES_BOOLEAN[$class] ?? [])) {
+                    elseif (in_array($property, self::TYPES_BOOLEAN[$class] ?? [])) {
                         $value = (!$value || 'false' === strtolower($value) || '0' === $value) ? false : true;
                     }
 
@@ -139,7 +144,7 @@ class AppFixture extends Fixture
 
                     // Convert json array
                     elseif (in_array($property, self::TYPES_JSON[$class] ?? [])) {
-                        $value = 'null' === strtolower($value) ? null : json_decode($value, true);
+                        $value = json_decode($value, true);
                     }
 
                     // Convert simple array
@@ -149,17 +154,17 @@ class AppFixture extends Fixture
 
                     // Convert datetime
                     elseif (in_array($property, self::TYPES_DATETIME[$class] ?? [])) {
-                        $value = (!$value || 'null' === strtolower($value)) ? null : (new \DateTime($value));
+                        $value = !$value ? null : (new \DateTime($value));
                     }
 
                     // Convert and modify datetime
                     elseif (in_array($property, self::TYPES_DATETIME_MODIFIED[$class] ?? [])) {
-                        $value = (!$value || 'null' === strtolower($value)) ? null : (new \DateTime())->modify($value);
+                        $value = !$value ? null : (new \DateTime())->modify($value);
                     }
 
                     // Convert entity
                     elseif (in_array($property, array_keys(self::TYPES_ENTITY[$class] ?? []))) {
-                        $value = (!$value || 'null' === strtolower($value)) ? null : $this->entities[self::ALIASES[self::TYPES_ENTITY[$class][$property]]][$value];
+                        $value = !$value ? null : $this->entities[self::ALIASES[self::TYPES_ENTITY[$class][$property]]][$value];
                     }
 
                     // Convert collection
