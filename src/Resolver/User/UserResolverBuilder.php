@@ -171,7 +171,16 @@ class UserResolverBuilder
     {
         $normalizers = [
             'contacts' => function ($contacts) {
-                return $this->contactConverter->filter($contacts ?? [], $this->parameters->get('app.users.contacts'));
+                $output = [];
+
+                foreach ($this->parameters->get('app.users.contacts') as $contact) {
+                    $output[] = [
+                        'contact' =>    $contact,
+                        'value' =>      array_values(array_filter($contacts, function ($c) use ($contact) {return $c['contact'] === $contact;}))[0]['value'] ?? ''
+                    ];
+                }
+
+                return $output;
             },
             'password' => function () {
                 return '';
