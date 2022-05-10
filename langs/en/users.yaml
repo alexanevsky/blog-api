@@ -31,6 +31,8 @@ messages:
         access_denied:  'You do not have access to erase this user.'
 
 errors:
+    username:
+        empty:  'Name can not be empty.'
     alias:
         numeric:    'Alias can not be numeric.'
         short:      'Alias should have {limit} character or more.'

@@ -184,6 +184,9 @@ class UserResolverBuilder
     private function getConstraints(string $option, User $user): array
     {
         $constraints = [
+            'username' => [
+                $this->constraints->notBlank('users.errors.username.empty'),
+            ],
             'alias' => [
                 $this->constraints->notNumeric('users.errors.alias.numeric'),
                 $this->constraints->minLength(User::ALIAS_MINLENGTH, 'users.errors.alias.short'),
