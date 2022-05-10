@@ -2,7 +2,7 @@ messages:
     posts_removed:
         access_denied:  'You do not have access to the list of removed posts.'
 
-    posts_unpublished:
+    unpublished_posts:
         access_denied:  'You do not have access to the list of unpublished posts.'
 
     post:
