@@ -19,3 +19,8 @@ constraints:
     less_or_equal:              'The value must be less than or equal to {value}.'
     identical_to_one_of:        'The value is incorrect.'
     all_identical_to_one_of:    'The value is incorrect.'
+
+errors:
+    image:
+        invalid_extension:  'Allowed images to upload: {extension}.'
+        big_size:           'Max image size: {size}.'

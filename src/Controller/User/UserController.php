@@ -2,6 +2,7 @@
 
 namespace App\Controller\User;
 
+use App\Component\File\ImageResolver;
 use App\Component\Response\JsonResponse\AccessDeniedResponse;
 use App\Component\Response\JsonResponse\DeletedResponse;
 use App\Component\Response\JsonResponse\FailureResponse;
@@ -18,6 +19,7 @@ use App\Repository\User\UserRepository;
 use App\Resolver\User\UserResolverBuilder;
 use App\Security\Voter\SecurityVoter;
 use App\Security\Voter\User\UserVoter;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/users')]
@@ -179,6 +181,76 @@ class UserController extends AbstractController
         return new SuccessResponse('users.messages.user_update.updated', data: [
             'user' => $this->normalize(UserNormalizer::class, $user)
         ]);
+    }
+
+    #[Route(path: '/{id<[\w-]+>}/avatar', methods: ['POST'])]
+    public function uploadAvatar(int|string $id)
+    {
+        $user = $this->usersRepository->findOneByIdOrAlias($id);
+
+        if (!$user) {
+            return new NotFoundResponse('users.messages.user.not_found');
+        } elseif (!$this->isGranted(UserVoter::ATTR_UPDATE, $user)) {
+            return new AccessDeniedResponse('users.messages.user_avatar_upload.access_denied', needAuth: !$this->isLogged());
+        }
+
+        $image = (ImageResolver::fromRequest($this->getRequest()))
+            ->setMaxSize(User::AVATAR_MAX_SIZE);
+
+        if (!$image->isValidMimeType()) {
+            return new FailureResponse('common.errors.image.invalid_extension', [
+                'extension' => strtoupper(implode(', ', $image->getAllowedExtensions()))
+            ]);
+        } elseif (!$image->isValidSize()) {
+            return new FailureResponse('common.errors.image.big_size', [
+                'size' => sprintf('%s B', $image->getMaxSize())
+            ]);
+        }
+
+        if ($user->hasAvatar()) {
+            (new Filesystem())->remove($this->getParameter('kernel.project_dir') . $user->getAvatarPathname());
+        }
+
+        $imageName = (string) (($user->getId() . ($user->hasAlias() ? '-' . $user->getAlias() : '')) . '.' . $image->getExtension());
+        $image
+            ->crop()
+            ->resizeMax(User::AVATAR_MAX_WIDTH)
+            ->save($this->getParameter('kernel.project_dir') . User::AVATAR_PATH, $imageName);
+
+        $user
+            ->setAvatar($imageName)
+            ->setUpdatedNow();
+
+        $this->getDoctrineManager()->persist($user);
+        $this->getDoctrineManager()->flush();
+
+        return new SuccessResponse('users.messages.user_avatar_upload.uploaded');
+    }
+
+    #[Route(path: '/{id<[\w-]+>}/avatar', methods: ['DELETE'])]
+    #[Route(path: '/{id<[\w-]+>}/avatar/delete', methods: ['POST'])]
+    public function deleteAvatar(int|string $id)
+    {
+        $user = $this->usersRepository->findOneByIdOrAlias($id);
+
+        if (!$user) {
+            return new NotFoundResponse('users.messages.user.not_found');
+        } elseif (!$this->isGranted(UserVoter::ATTR_UPDATE, $user)) {
+            return new AccessDeniedResponse('users.messages.user_avatar_delete.access_denied', needAuth: !$this->isLogged());
+        }
+
+        if ($user->hasAvatar()) {
+            (new Filesystem())->remove($this->getParameter('kernel.project_dir') . $user->getAvatarPathname());
+
+            $user
+                ->setAvatar('')
+                ->setUpdatedNow();
+
+            $this->getDoctrineManager()->persist($user);
+            $this->getDoctrineManager()->flush();
+        }
+
+        return new SuccessResponse('users.messages.user_avatar_delete.deleted');
     }
 
     #[Route(path: '/{id<[\w-]+>}/remove', methods: ['POST'])]

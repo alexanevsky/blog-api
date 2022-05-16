@@ -33,6 +33,14 @@ messages:
         erased:         'The user was successfully erased.'
         access_denied:  'You do not have access to erase this user.'
 
+    user_avatar_upload:
+        uploaded:       'New avatar uploaded successfully.'
+        access_denied:  'You do not have access to update this user.'
+
+    user_avatar_delete:
+        deleted:        'User avatar deleted successfully.'
+        access_denied:  'You do not have access to update this user.'
+
 errors:
     username:
         empty:  'Name can not be empty.'

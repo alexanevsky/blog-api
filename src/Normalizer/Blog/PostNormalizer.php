@@ -38,7 +38,7 @@ class PostNormalizer extends AbstractNormalizer
             'description' =>    $data->getDescription(),
             'content' =>        $data->getContent(),
             'image' =>          $data->getImage(),
-            'image_url' =>      !$data->hasImage() ? '' : sprintf('%s/uploads/blog/posts/images/%s', $this->parameters->get('app.base_url'), $data->getImage()),
+            'image_url' =>      !$data->hasImage() ? '' : $this->parameters->get('app.base_url') . $data->getImagePublicPathname(),
             'is_published' =>   $data->isPublished(),
             'is_removed' =>     $data->isRemoved(),
             'created_at' =>     $data->getCreatedAt()?->format('c'),

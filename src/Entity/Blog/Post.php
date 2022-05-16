@@ -13,6 +13,20 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'blog_posts')]
 class Post implements EntityInterface
 {
+    /**
+     * Max width and height of image (px).
+     */
+    public const IMAGE_MAX_WIDTH = 2048;
+
+    /**
+     * Max size image (bytes).
+     */
+    public const IMAGE_MAX_SIZE = 4000;
+
+    public const IMAGE_PUBLIC_PATH = '/uploads/blog/posts/images';
+
+    public const IMAGE_PATH = '/public' . self::IMAGE_PUBLIC_PATH;
+
     #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: 'integer', options: ['unsigned' => true])]
     protected int $id;
 
@@ -230,6 +244,16 @@ class Post implements EntityInterface
     public function getImage(): string
     {
         return $this->image;
+    }
+
+    public function getImagePathname(): ?string
+    {
+        return !$this->image ? null : self::IMAGE_PATH . '/' . $this->image;
+    }
+
+    public function getImagePublicPathname(): ?string
+    {
+        return !$this->image ? null : self::IMAGE_PUBLIC_PATH . '/' . $this->image;
     }
 
     public function setImage(string $image): self

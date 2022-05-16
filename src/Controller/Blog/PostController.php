@@ -2,6 +2,7 @@
 
 namespace App\Controller\Blog;
 
+use App\Component\File\ImageResolver;
 use App\Component\Response\JsonResponse\AccessDeniedResponse;
 use App\Component\Response\JsonResponse\DeletedResponse;
 use App\Component\Response\JsonResponse\FailureResponse;
@@ -22,6 +23,7 @@ use App\Resolver\Blog\CommentResolverBuilder;
 use App\Resolver\Blog\PostResolverBuilder;
 use App\Security\Voter\Blog\PostVoter;
 use App\Security\Voter\SecurityVoter;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/blog/posts')]
@@ -202,6 +204,75 @@ class PostController extends AbstractController
         return new SuccessResponse('blog_posts.messages.post_update.updated', data: [
             'post' => $this->normalize(PostNormalizer::class, $post)
         ]);
+    }
+
+    #[Route(path: '/{id<[\d]+>}/image', methods: ['POST'])]
+    public function uploadImage(int $id)
+    {
+        $post = $this->postsRepository->findOneById($id);
+
+        if (!$post) {
+            return new NotFoundResponse('blog_posts.messages.post.not_found');
+        } elseif (!$this->isGranted(PostVoter::ATTR_UPDATE, $post)) {
+            return new AccessDeniedResponse('blog_posts.messages.post_image_upload.access_denied', needAuth: !$this->isLogged());
+        }
+
+        $image = (ImageResolver::fromRequest($this->getRequest()))
+            ->setMaxSize(Post::IMAGE_MAX_SIZE);
+
+        if (!$image->isValidMimeType()) {
+            return new FailureResponse('common.errors.image.invalid_extension', [
+                'extension' => strtoupper(implode(', ', $image->getAllowedExtensions()))
+            ]);
+        } elseif (!$image->isValidSize()) {
+            return new FailureResponse('common.errors.image.big_size', [
+                'size' => sprintf('%s B', $image->getMaxSize())
+            ]);
+        }
+
+        if ($post->hasImage()) {
+            (new Filesystem())->remove($this->getParameter('kernel.project_dir') . $post->getImagePathname());
+        }
+
+        $imageName = (string) (($post->getId() . ($post->hasAlias() ? '-' . $post->getAlias() : '')) . '.' . $image->getExtension());
+        $image
+            ->resizeMax(Post::IMAGE_MAX_WIDTH)
+            ->save($this->getParameter('kernel.project_dir') . Post::IMAGE_PATH, $imageName);
+
+        $post
+            ->setImage($imageName)
+            ->setUpdatedNow();
+
+        $this->getDoctrineManager()->persist($post);
+        $this->getDoctrineManager()->flush();
+
+        return new SuccessResponse('posts.messages.post_image_upload.uploaded');
+    }
+
+    #[Route(path: '/{id<[\d]+>}/image', methods: ['DELETE'])]
+    #[Route(path: '/{id<[\d]+>}/image/delete', methods: ['POST'])]
+    public function deleteImage(int|string $id)
+    {
+        $post = $this->postsRepository->findOneById($id);
+
+        if (!$post) {
+            return new NotFoundResponse('blog_posts.messages.post.not_found');
+        } elseif (!$this->isGranted(PostVoter::ATTR_UPDATE, $post)) {
+            return new AccessDeniedResponse('blog_posts.messages.post_image_delete.access_denied', needAuth: !$this->isLogged());
+        }
+
+        if ($post->hasImage()) {
+            (new Filesystem())->remove($this->getParameter('kernel.project_dir') . $post->getImagePathname());
+
+            $post
+                ->setImage('')
+                ->setUpdatedNow();
+
+            $this->getDoctrineManager()->persist($post);
+            $this->getDoctrineManager()->flush();
+        }
+
+        return new SuccessResponse('users.messages.post_image_delete.deleted');
     }
 
     #[Route(path: '/{id<[\d]+>}/remove', methods: ['POST'])]

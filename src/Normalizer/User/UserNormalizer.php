@@ -42,7 +42,7 @@ class UserNormalizer extends AbstractNormalizer
             'contacts' =>                       array_values($this->contactConverter->addLinks($this->contactConverter->filter($data->getContacts(), $this->parameters->get('app.users.contacts')))),
             'birthdate' =>                      $data->getBirthdate(),
             'avatar' =>                         $data->getAvatar(),
-            'avatar_url' =>                     !$data->hasAvatar() ? '' : sprintf('%s/uploads/users/avatars/%s', $this->parameters->get('app.base_url'), $data->getAvatar()),
+            'avatar_url' =>                     !$data->hasAvatar() ? '' : $this->parameters->get('app.base_url') . $data->getAvatarPublicPathname(),
             'title' =>                          $data->getTitle(),
             'city' =>                           $data->getCity(),
             'biography' =>                      $data->getBiography(),

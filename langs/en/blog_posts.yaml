@@ -32,6 +32,14 @@ messages:
         deleted:        'The post was successfully deleted.'
         access_denied:  'You do not have access to delete this post.'
 
+    post_image_upload:
+        uploaded:       'New image uploaded successfully.'
+        access_denied:  'You do not have access to update this post.'
+
+    post_image_delete:
+        deleted:        'Post image deleted successfully.'
+        access_denied:  'You do not have access to update this post.'
+
 errors:
     title:
         empty:      'Title can not be empty.'

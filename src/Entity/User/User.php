@@ -68,6 +68,21 @@ class User implements EntityInterface, UserInterface
      */
     public const TITLE_MAXLENGTH = 50;
 
+    /**
+     * Max width and height of avatar (px).
+     */
+    public const AVATAR_MAX_WIDTH = 500;
+
+    /**
+     * Max size avatar (bytes).
+     */
+    public const AVATAR_MAX_SIZE = 4000;
+
+    public const AVATAR_PUBLIC_PATH = '/uploads/users/avatars';
+
+    public const AVATAR_PATH = '/public' . self::AVATAR_PUBLIC_PATH;
+
+
     #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: 'integer', options: ['unsigned' => true])]
     protected int $id;
 
@@ -332,6 +347,16 @@ class User implements EntityInterface, UserInterface
     public function getAvatar(): string
     {
         return $this->avatar;
+    }
+
+    public function getAvatarPathname(): ?string
+    {
+        return !$this->avatar ? null : self::AVATAR_PATH . '/' . $this->avatar;
+    }
+
+    public function getAvatarPublicPathname(): ?string
+    {
+        return !$this->avatar ? null : self::AVATAR_PUBLIC_PATH . '/' . $this->avatar;
     }
 
     public function setAvatar(string $avatar): self
