@@ -234,7 +234,7 @@ class PostController extends AbstractController
             (new Filesystem())->remove($this->getParameter('kernel.project_dir') . $post->getImagePathname());
         }
 
-        $imageName = (string) (($post->getId() . ($post->hasAlias() ? '-' . $post->getAlias() : '')) . '.' . $image->getExtension());
+        $imageName = (string) (($post->getId() . ($post->hasAlias() ? '-' . $post->getAlias() : '')) . '-' . time() . '.' . $image->getExtension());
         $image
             ->resizeMax(Post::IMAGE_MAX_WIDTH)
             ->save($this->getParameter('kernel.project_dir') . Post::IMAGE_PATH, $imageName);

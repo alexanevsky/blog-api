@@ -211,7 +211,7 @@ class UserController extends AbstractController
             (new Filesystem())->remove($this->getParameter('kernel.project_dir') . $user->getAvatarPathname());
         }
 
-        $imageName = (string) (($user->getId() . ($user->hasAlias() ? '-' . $user->getAlias() : '')) . '.' . $image->getExtension());
+        $imageName = (string) (($user->getId() . ($user->hasAlias() ? '-' . $user->getAlias() : '')) . '-' . time() . '.' . $image->getExtension());
         $image
             ->crop()
             ->resizeMax(User::AVATAR_MAX_WIDTH)
